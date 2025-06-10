@@ -3,7 +3,7 @@ import numpy as np
 import streamlit as st
 
 def csv_cleaning():
-    df = pd.read_csv('C:\\Users\\leona\\projeto_final\\database\\csv_anac_2025.csv', sep=';', encoding='latin1')
+    df = pd.read_csv('C:\\Users\\Aluno\\Downloads\\projeto_final_anac\\database\\csv_anac_2025.csv', sep=';', encoding='latin1')
 
     df_bkp = df.copy()
 
