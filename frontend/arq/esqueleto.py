@@ -2,7 +2,13 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from PIL import Image
-st.set_page_config(page_title="Dashboard de Vendas", layout="wide")
+from home import load_images
+
+st.set_page_config(
+    page_title="Analytics Music",
+    page_icon="🎶",
+    layout="centered"
+)
 st.markdown("""
     <style>
     /* Fundo da página */
@@ -104,3 +110,12 @@ st.bar_chart(vendas_categoria)
 
 st.subheader("🗃️ Dados Detalhados")
 st.dataframe(dados_filtrados.sort_values(by="Data", ascending=False))
+def music():
+    st.title("Dashboard Musical")
+    st.write("Análise de streaming e catálogo")
+    
+    if st.button("← Voltar ao Analytics Hub"):
+        st.switch_page("../home.py")
+
+if __name__ == "__main__":
+    music()
