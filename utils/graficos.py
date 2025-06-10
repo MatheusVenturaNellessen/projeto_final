@@ -36,3 +36,5 @@ st.bar_chart(df_grouped2.head(), x_label='Companhias Aéreas (sigla)', y_label='
 # ==================================================
 #                     3º GRÁFICO                        
 # ==================================================
+
+teste
