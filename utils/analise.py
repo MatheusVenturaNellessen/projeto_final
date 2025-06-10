@@ -51,7 +51,6 @@ def csv_cleaning():
         "CORREIO KM": 'correio_km',
         "ASSENTOS": 'assentos',
         "PAYLOAD": 'payload',
-        "HORAS VOADAS": 'horas_voadas',
         "BAGAGEM (KG)": 'bagagem_kg',
         'HORAS VOADAS': 'HORAS_VOADAS',
         'ANO': 'ano',

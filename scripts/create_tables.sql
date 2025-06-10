@@ -11,25 +11,19 @@ CREATE TABLE IF NOT EXISTS aeroportos_origem (
     id_aeroporto_origem SERIAL PRIMARY KEY,
     aeroporto_origem_sigla VARCHAR(10) NOT NULL UNIQUE,
     aeroporto_origem_nome VARCHAR(100),
-    aeroporto_origem_uf VARCHAR(10) NOT NULL,
-    aeroporto_origem_regiao VARCHAR(50) NOT NULL,
-    aeroporto_origem_pais VARCHAR(50) NOT NULL,
-    aeroporto_origem_continente VARCHAR(50) NOT NULL
+    aeroporto_origem_pais VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS aeroportos_destino (
     id_aeroporto_destino SERIAL PRIMARY KEY,
     aeroporto_destino_sigla VARCHAR(10) NOT NULL UNIQUE,
     aeroporto_destino_nome VARCHAR(100),
-    aeroporto_destino_uf VARCHAR(10) NOT NULL,
-    aeroporto_destino_regiao VARCHAR(50) NOT NULL,
-    aeroporto_destino_pais VARCHAR(50) NOT NULL,
-    aeroporto_destino_continente VARCHAR(50) NOT NULL
+    aeroporto_destino_pais VARCHAR(50) NOT NULL
 );
 
 
 CREATE TABLE IF NOT EXISTS voos (
-    id_voos INTEGER PRIMARY KEY,
+    id_voos SERIAL PRIMARY KEY,
     empresa_id INTEGER NOT NULL,
     aeroporto_origem_id INTEGER NOT NULL,
     aeroporto_destino_id INTEGER NOT NULL,

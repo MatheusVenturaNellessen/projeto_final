@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from utils.database import execute_query, create_tables 
+from utils.database import execute_query, create_tables, feed_tables
 from utils.analise import csv_cleaning
 
 
@@ -10,6 +10,6 @@ df = pd.read_csv("C:\\Users\\leona\\projeto_final\\database\\csv_anac_2025.csv",
 st.write(df.columns.tolist())
 csv_cleaning()
 create_tables()
-
+feed_tables()
 
 st.title("ANAC - Análise de Dados")
