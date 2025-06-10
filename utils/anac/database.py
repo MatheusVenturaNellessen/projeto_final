@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 
 # Load DataFrame outside the function if it's used globally
-df = pd.read_csv("C:\\Users\\leona\\projeto_final\\database\\anac_2025_sem_tratar_outliers.csv" , sep=';', encoding='latin1')
+df = pd.read_csv("C:\\Users\\leona\\projeto_final\\database\\anac\\anac_2025_sem_tratar_outliers.csv" , sep=';', encoding='latin1')
 
 def get_connection():
     try:
@@ -63,7 +63,7 @@ def execute_query(query, params=None, return_df=False):
         conn.close()
 
 def create_tables():
-    sql_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts', 'create_tables.sql')
+    sql_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'C:\\Users\\leona\\projeto_final\\scripts\\anac', 'create_tables.sql')
     with open(sql_path, 'r') as f:
         content = f.read()
         execute_query(content.strip())
