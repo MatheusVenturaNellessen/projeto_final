@@ -1,30 +1,37 @@
 import pandas as pd
+import numpy as np
+import streamlit as st
 
 def csv_cleaning():
-    
-    df_anac = pd.read_csv('database/csv_anac_2025.csv', sep=';', encoding='latin1')
+    df = pd.read_csv('C:\\Users\\leona\\projeto_final\\database\\csv_anac_2025.csv', sep=';', encoding='latin1')
 
-    df_anac['HORAS VOADAS'] = df_anac['HORAS VOADAS'].str.replace(',', '.', regex=False)
-    df_anac['HORAS VOADAS'] = pd.to_numeric(df_anac['HORAS VOADAS'], errors='coerce')
-    df_anac['ANO'] = pd.to_datetime(df_anac['ANO'], errors='coerce')
-    df_anac['MÊS'] = pd.to_datetime(df_anac['MÊS'], errors='coerce')
+    df_bkp = df.copy()
 
-    df_anac.rename(columns={
+    df = df.drop(['AEROPORTO DE ORIGEM (UF)', 
+                  'AEROPORTO DE ORIGEM (REGIÃO)', 
+                  'AEROPORTO DE ORIGEM (CONTINENTE)', 
+                  'AEROPORTO DE DESTINO (UF)', 
+                  'AEROPORTO DE DESTINO (REGIÃO)', 
+                  'AEROPORTO DE DESTINO (CONTINENTE)'], axis=1)
+ 
+    df['HORAS VOADAS'] = df['HORAS VOADAS'].str.replace(',', '.', regex=False)
+    df['HORAS VOADAS'] = pd.to_numeric(df['HORAS VOADAS'], errors='coerce')
+
+    for col in df.select_dtypes(include=['object']):
+        df[col] = df[col].str.strip().str.upper()
+
+    df = df.fillna(0) # os valores nulos foram preenchidos por 0
+  
+    df.rename(columns={
         "EMPRESA (SIGLA)": 'empresa_sigla',
         "EMPRESA (NOME)": 'empresa_nome',
         "EMPRESA (NACIONALIDADE)": 'empresa_nacionalidade',
         "AEROPORTO DE ORIGEM (SIGLA)": 'aeroporto_origem_sigla',
         "AEROPORTO DE ORIGEM (NOME)": 'aeroporto_origem_nome',
-        "AEROPORTO DE ORIGEM (UF)": 'aeroporto_origem_uf',
-        "AEROPORTO DE ORIGEM (REGIÃO)": 'aeroporto_origem_regiao',
         "AEROPORTO DE ORIGEM (PAÍS)": 'aeroporto_origem_pais',
-        "AEROPORTO DE ORIGEM (CONTINENTE)": 'aeroporto_origem_continente',
         "AEROPORTO DE DESTINO (SIGLA)": 'aeroporto_destino_sigla',
         "AEROPORTO DE DESTINO (NOME)": 'aeroporto_destino_nome',
-        "AEROPORTO DE DESTINO (UF)": 'aeroporto_destino_uf',
-        "AEROPORTO DE DESTINO (REGIÃO)": 'aeroporto_destino_regiao',
         "AEROPORTO DE DESTINO (PAÍS)": 'aeroporto_destino_pais',
-        "AEROPORTO DE DESTINO (CONTINENTE)": 'aeroporto_destino_continente',
         "NATUREZA": 'natureza',
         "GRUPO DE VOO": 'grupo_voo',
         "PASSAGEIROS PAGOS": 'passageiros_pagos',
@@ -51,20 +58,9 @@ def csv_cleaning():
         'MÊS': 'mes'
     }, inplace=True)
 
+    df_not_tratado = df.copy()
 
+    df_not_tratado.to_csv('database/anac_2025_sem_tratar_outliers.csv', sep=';', encoding='latin1', index=False)
+    st.write("Arquivo CSV sem tratamento de outliers salvo como 'anac_2025_sem_tratar_outliers.csv'.")
+    st.dataframe(df_not_tratado)
 
-
-    # print('Quantidade de valores nulos em cada Serie/coluna:\n')
-    # print(df_anac.isna().sum())
-    # print('-------------------------------------------------')
-
-    # print('Percentual de valores nulos por Serie/coluna:\n')
-    # print(df_anac.isna().mean() * 100)
-    # print('-------------------------------------------------')
-
-    # df_anac = df_anac.dropna()
-
-    # print(df_anac.info())
-
-    df_anac.to_csv('database/csv_limpo_anac_2025.csv', sep=';', encoding='latin1')
-    return df_anac

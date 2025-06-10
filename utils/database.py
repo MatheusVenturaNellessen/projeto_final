@@ -5,7 +5,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 import pandas as pd
 
-df = pd.read_csv("C:\\Users\\leona\\projeto_final\\database\\csv_limpo_anac_2025.csv" , sep=';', encoding='latin1')
+df = pd.read_csv("C:\\Users\\leona\\projeto_final\\database\\csv_anac_2025.csv" , sep=';', encoding='latin1')
 
 def get_connection():
     try:
@@ -67,3 +67,5 @@ def create_tables():
         content = f.read()
         execute_query(content.strip())
 
+def feed_tables():
+    st.write()
