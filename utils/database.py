@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 
 # Load DataFrame outside the function if it's used globally
-df = pd.read_csv("C:\\Users\\leona\\projeto_final\\database\\anac_2025_sem_tratar_outliers.csv" , sep=';', encoding='latin1')
+df = pd.read_csv("C:\\Users\\Aluno\\Downloads\\projeto_final_anac\\database\\anac_2025_sem_tratar_outliers.csv" , sep=';', encoding='latin1')
 
 def get_connection():
     try:
