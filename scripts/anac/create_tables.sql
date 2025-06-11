@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS aeroportos_destino (
     aeroporto_destino_pais VARCHAR(50) NOT NULL
 );
 
-
 CREATE TABLE IF NOT EXISTS voos (
     id_voos SERIAL PRIMARY KEY,
     empresa_id INTEGER NOT NULL,
