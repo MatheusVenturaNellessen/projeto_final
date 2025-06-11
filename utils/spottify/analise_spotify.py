@@ -5,11 +5,12 @@ import streamlit as st
 def spotify_csv_cleaning():
     
     df = pd.read_csv('C:\\Users\\leona\\projeto_final\\database\\spotify\\spotify_2023.csv', sep=',', encoding='latin1', parse_dates=[['released_year', 'released_month', 'released_day']])
-
     df_bkp = df.copy()
-
     df = df.drop('key', axis=1)
 
+    colunas_para_remover = ['danceability_%', 'valence_%', 'energy_%','liveness_%' , 'speechiness_%']
+    df.drop(columns=colunas_para_remover, inplace=True)
+    
     df['streams'] = pd.to_numeric(df['streams'], errors='coerce')
 
     df['in_deezer_playlists'] = df['in_deezer_playlists'].str.replace(',', '.', regex=False)
@@ -27,7 +28,7 @@ def spotify_csv_cleaning():
     df.rename(columns={
         'released_year_released_month_released_day': 'data_lancamento',
         'track_name': 'nome_artistico',
-        'artist(s)_name': 'nome_artista(s)',
+        'artist(s)_name': 'nome_artista',
         'artist_count': 'qtd_artistas',
         'in_spotify_playlists': 'qtd_playlists_spotify',
         'in_spotify_charts': 'qtd_destaques_spotify',
@@ -52,4 +53,4 @@ def spotify_csv_cleaning():
 
     # print(df.info()) # funcionou 
 
-    df.to_csv('database/spotify_2023_tratado.csv', sep=',', encoding='utf-8', index=False)
+    df.to_csv('C:\\Users\\leona\\projeto_final\\database\\spotify\\spotify_2023_tratado.csv', sep=',', encoding='utf-8', index=False)
