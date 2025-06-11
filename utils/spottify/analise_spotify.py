@@ -53,4 +53,4 @@ def spotify_csv_cleaning():
 
     # print(df.info()) # funcionou 
 
-    df.to_csv('database/spotify/spotify_2023_tratado.csv', sep=',', encoding='utf-8', index=False)
+    df.to_csv('C:\\Users\\leona\\projeto_final\\database\\spotify\\spotify_2023_tratado.csv', sep=',', encoding='utf-8', index=False)
