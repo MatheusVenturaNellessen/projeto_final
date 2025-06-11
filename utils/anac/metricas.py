@@ -94,13 +94,13 @@ df_filtrado = df[df['empresa_sigla'].isin(st.session_state['empresas_selecionada
 # ========== Gráfico de fator de ocupação ==========
 st.subheader("Fator de Ocupação (RPK / ASK) por Empresa")
 
-df_ocupacao = df_filtrado.groupby(['data', 'empresa_sigla'])['fator_ocupacao'].mean().reset_index()
+df_f_ocupacao = df_filtrado.groupby(['data', 'empresa_sigla'])['fator_ocupacao'].mean().reset_index()
 
-df_pivot_ocupacao = df_ocupacao.pivot(index='data', columns='empresa_sigla', values='fator_ocupacao')
+df_pivot_f_ocupacao = df_f_ocupacao.pivot(index='data', columns='empresa_sigla', values='fator_ocupacao')
 
-df_pivot_ocupacao = df_pivot_ocupacao.fillna(0)
+df_pivot_f_ocupacao = df_pivot_f_ocupacao.fillna(0)
 
-st.line_chart(df_pivot_ocupacao)
+st.line_chart(df_pivot_f_ocupacao)
 st.markdown('''
 O Fator de Ocupação mede o quanto da capacidade de assentos oferecida foi efetivamente utilizada por passageiros pagantes.
         
@@ -124,13 +124,13 @@ Como interpretar:
 # ========== Gráfico de fator de carga ==========
 st.subheader("Fator de Carga (RTK / ATK) por Empresa")
 
-df_carga = df_filtrado.groupby(['data', 'empresa_sigla'])['fator_carga'].mean().reset_index()
+df_f_carga = df_filtrado.groupby(['data', 'empresa_sigla'])['fator_carga'].mean().reset_index()
 
-df_pivot_carga = df_carga.pivot(index='data', columns='empresa_sigla', values='fator_carga')
+df_pivot_f_carga = df_f_carga.pivot(index='data', columns='empresa_sigla', values='fator_carga')
 
-df_pivot_carga = df_pivot_carga.fillna(0)
+df_pivot_f_carga = df_pivot_f_carga.fillna(0)
 
-st.line_chart(df_pivot_carga)
+st.line_chart(df_pivot_f_carga)
 st.markdown('''
 O fator de carga avalia o aproveitamento da capacidade de carga das aeronaves.
 
@@ -151,7 +151,7 @@ Como interpretar:
 - Esse fator é muito relevante para empresas que operam voos cargueiros ou mistas (passageiros + carga).
 ''', unsafe_allow_html=True)
 
-# ========== TRATANDO CSV again ==========
+# ========== TRATANDO CSV again ==========r
 
 df['passageiros_por_decolagem'] = (df['passageiros_pagos'] / df['decolagens']).where(df['decolagens'] != 0)
 df['carga_total_kg'] = df['carga_paga_kg'] + df['carga_gratis_kg'] + df['correios_kg']
@@ -161,38 +161,88 @@ df['distancia_por_voo'] = (df['distancia_voada_km'] / df['decolagens']).where(df
 df['assentos_por_voo'] = (df['assentos'] / df['decolagens']).where(df['decolagens'] != 0)
 df['payload_efficiency'] = (df['payload'] / (df['ask'] + df['atk'])).where((df['ask'] + df['atk']) != 0)
 
+# =================== FILTRO DE EMPRESA ===================
 
-df_filtrado2 = df[df['empresa_sigla'].isin(st.session_state['empresas_selecionadas'])]  
-
-df_filtrado2 = df_filtrado2.dropna(subset=['passageiros_por_decolagem', 'fator_ocupacao', 'payload_efficiency'])
+df_filtrado2 = df[
+    (df['empresa_sigla'].isin(st.session_state['empresas_selecionadas'])) &
+    (df['passageiros_por_decolagem'].notna()) &
+    (df['carga_por_voo'].notna()) &
+    (df['distancia_por_voo'].notna())
+]
 
 # ==================== GRÁFICO PASSAGEIROS POR DECOLAGEM ====================
-
 st.subheader("Média de Passageiros por Decolagem")
 
-df_group_by_passg_decolagem = df_filtrado2.groupby(['data', 'empresa_sigla'])['passageiros_por_decolagem'].mean().reset_index()
+df_passageiros_decolagem = df_filtrado2.groupby(['data', 'empresa_sigla'])['passageiros_por_decolagem'].mean().reset_index()
 
-df_pivot_passg_decolagem = df_group_by_passg_decolagem.pivot(index='data', columns='empresa_sigla', values='passageiros_por_decolagem').fillna(0)
+df_pivot_passageiros_decolagem = df_passageiros_decolagem.pivot(index='data', columns='empresa_sigla', values='passageiros_por_decolagem').fillna(0)
 
-st.line_chart(df_pivot_passg_decolagem, x_label='Data (mês dia)', y_label='Média de Passageiros')
+st.line_chart(df_pivot_passageiros_decolagem, x_label='Data (mês dia)', y_label='Média de Passageiros')
 
 # ==================== GRÁFICO CARGA TOTAL POR VOO ====================
-
 st.subheader("Média de Carga Total por Voo (em Kg)")
 
-df_group_by_carga_voo = df_filtrado.groupby(['data', 'empresa_sigla'])['carga_por_voo'].mean().reset_index()
-df_pivot_carga_voo = df_group_by_carga_voo.pivot(index='data', columns='empresa_sigla', values='carga_por_voo').fillna(0)
+df_carga_voo = df_filtrado2.groupby(['data', 'empresa_sigla'])['carga_por_voo'].mean().reset_index()
 
-st.line_chart(df_pivot_carga_voo, x_label='Data (mês dia)', y_label='Média de Carga Total (Kg)')
+df_pivot_carga_voo = df_carga_voo.pivot(index='data', columns='empresa_sigla', values='carga_por_voo').fillna(0)
 
-# ==================== GRÁFICO DISTÂNCIA MÉDIA POR VOO ====================
+st.line_chart(df_pivot_carga_voo, x_label='Data (mês dia)', y_label='Carga Total (Kg)')
 
+# ==================== GRÁFICO DISTÂNCIA POR VOO ====================
 st.subheader("Distância Média por Voo (em Km)")
 
-df_filtrado3 = df[df['empresa_sigla'].isin(st.session_state['empresas_selecionadas'])]
-df_filtrado3 = df_filtrado3.dropna(subset=['distancia_por_voo'])
+df_distancia_voo = df_filtrado2.groupby(['data', 'empresa_sigla'])['distancia_por_voo'].mean().reset_index()
 
-df_group_by_distancia_voo = df_filtrado3.groupby(['data', 'empresa_sigla'])['distancia_por_voo'].mean().reset_index()
-df_pivot_distancia_voo = df_group_by_distancia_voo.pivot(index='data', columns='empresa_sigla', values='distancia_por_voo').fillna(0)
+df_pivot_distancia_voo = df_distancia_voo.pivot(index='data', columns='empresa_sigla', values='distancia_por_voo').fillna(0)
 
 st.line_chart(df_pivot_distancia_voo, x_label='Data (mês dia)', y_label='Distância Média por Voo (Km)')
+
+# ========== GRÁFICO 4: Combustível por Passageiro ==========
+st.subheader("Combustível por Passageiro (em litros)")
+
+df_combustivel_passageiro = df_filtrado2.groupby(['data', 'empresa_sigla'])['combustivel_por_passageiro'].mean().reset_index()
+
+df_pivot_combustivel_passageiro = df_combustivel_passageiro.pivot(index='data', columns='empresa_sigla', values='combustivel_por_passageiro').fillna(0)
+
+st.line_chart(df_pivot_combustivel_passageiro, x_label='Data (mês dia)', y_label='Combustível Utilizados (L)')
+
+# ========== GRÁFICO 5: Assentos por Voo ==========
+st.subheader("Assentos por Voo")
+
+df_assentos_voo = df_filtrado2.groupby(['data', 'empresa_sigla'])['assentos_por_voo'].mean().reset_index()
+
+df_pivot_assentos_voo = df_assentos_voo.pivot(index='data', columns='empresa_sigla', values='assentos_por_voo').fillna(0)
+
+st.line_chart(df_pivot_assentos_voo, x_label='Data (mês dia)', y_label='Qtd. de Assentos')
+
+# ========== GRÁFICO 6: Payload Efficiency ==========
+
+st.subheader("Eficiência da Carga Útil (Payload Efficiency)")
+
+df_payload_efficiency = df_filtrado2.groupby(['data', 'empresa_sigla'])['payload_efficiency'].mean().reset_index()
+
+df_payload_efficiency = df_payload_efficiency.pivot(index='data', columns='empresa_sigla', values='payload_efficiency').fillna(0)
+
+st.line_chart(df_payload_efficiency, x_label='Data (mês dia)', y_label='Coeficiente de Payload')
+
+st.markdown('''
+A eficiência de Carga Útil mede o quanto da capacidade total da aeronave foi efetivamente utilizada em uma operação aérea. Ela combina tanto o transporte de passageiros quanto de carga, oferecendo uma visão integrada do uso da capacidade total disponível.
+
+Fórmula: 
+
+            Payload Efficiency = Payload / ASK + ATK
+ 
+- Payload: carga total útil transportada (em toneladas), considerando tanto passageiros quanto carga e correio.
+
+- ASK (Available Seat Kilometers): capacidade de passageiros oferecida.
+
+- ATK (Available Ton Kilometers): capacidade de carga oferecida.
+
+Como interpretar:
+
+- Valores próximos de 1.0 (ou 100%) indicam que a empresa está aproveitando quase toda sua capacidade disponível para transportar carga e passageiros.
+
+- Valores abaixo de 0.6 geralmente indicam ociosidade significativa, com aeronaves voando com capacidade disponível não utilizada.
+
+- Valores muito altos e constantes podem indicar alta eficiência ou até sobrecarga, o que exige atenção operacional.
+''', unsafe_allow_html=True)
