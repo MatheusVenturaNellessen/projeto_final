@@ -3,7 +3,7 @@ import numpy as np
 import streamlit as st
 
 def csv_cleaning():
-    df = pd.read_csv('C:\\Users\\Aluno\\Downloads\\projeto_final_anac\\database\\csv_anac_2025.csv', sep=';', encoding='latin1')
+    df = pd.read_csv('C:\\Users\\leona\\projeto_final\\database\\anac\\csv_anac_2025.csv', sep=';', encoding='latin1')
 
     df_bkp = df.copy()
 
@@ -59,7 +59,7 @@ def csv_cleaning():
 
     df_not_tratado = df.copy()
 
-    df_not_tratado.to_csv('database/anac_2025_sem_tratar_outliers.csv', sep=';', encoding='latin1', index=False)
-    st.write("Arquivo CSV sem tratamento de outliers salvo como 'anac_2025_sem_tratar_outliers.csv'.")
-    st.dataframe(df_not_tratado)
+    df_not_tratado.to_csv('database/anac/anac_2025_sem_tratar_outliers.csv', sep=';', encoding='latin1', index=False)
+    # st.write("Arquivo CSV sem tratamento de outliers salvo como 'anac_2025_sem_tratar_outliers.csv'.")
+    # st.dataframe(df_not_tratado)
 
