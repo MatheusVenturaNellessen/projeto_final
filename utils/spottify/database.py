@@ -7,7 +7,7 @@ import pandas as pd
 from utils.anac.database import execute_query, get_connection
 import numpy as np
 
-df = pd.read_csv("C:\\Users\\leona\\projeto_final\\database\\spotify\\spotify_2023_tratado.csv", sep=',', encoding='latin1')
+df = pd.read_csv("C:\\Users\\leona\\projeto_final\\database\\spotify\\spotify_2023.csv", sep=',', encoding='latin1')
 
 def create_tables_spotify():
     sql_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'C:\\Users\\leona\\projeto_final\\scripts\\spotify', 'create_tables_spotify.sql')
