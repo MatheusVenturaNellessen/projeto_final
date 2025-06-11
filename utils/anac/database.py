@@ -8,6 +8,7 @@ import pandas as pd
 # Load DataFrame outside the function if it's used globally
 df = pd.read_csv("C:\\Users\\leona\\projeto_final\\database\\anac\\anac_2025_sem_tratar_outliers.csv" , sep=';', encoding='latin1')
 
+
 def get_connection():
     try:
         if os.environ.get('POSTGRES_HOST'):
