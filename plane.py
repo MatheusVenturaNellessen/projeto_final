@@ -63,7 +63,7 @@ def plane():
         </style>
     """, unsafe_allow_html=True)
 
-    df = pd.read_csv("C:/Users/mathe/Documentos/Development/projeto_final/database/anac/anac_2025_sem_tratar_outliers.csv", sep=';', encoding='latin1')
+    df = pd.read_csv("database\\anac\\anac_2025_sem_tratar_outliers.csv", sep=';', encoding='latin1')
 
     df['ano'] = pd.to_numeric(df['ano'], errors='coerce')
     df['mes'] = pd.to_numeric(df['mes'], errors='coerce')
@@ -81,7 +81,7 @@ def plane():
     df['payload_efficiency'] = (df['payload'] / (df['ask'] + df['atk'])).where((df['ask'] + df['atk']) != 0)
 
     # ============= SIDEBAR INICIAL =============
-    st.sidebar.image("C:/Users/mathe/Documentos/Development/projeto_final/frontend/arq/plane.png", width=150)
+    st.sidebar.image("frontend\\arq\\plane.png", width=150)
 
     # st.sidebar.markdown(
     #     """

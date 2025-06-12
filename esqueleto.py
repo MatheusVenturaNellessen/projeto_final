@@ -2,121 +2,46 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from PIL import Image
+from utils.anac.database import get_connection
 
+def pagina_artistas():
+    st.title("🎤 Músicas por Artista")
 
-# st.set_page_config(
-#     page_title="Analytics Music",
-#     page_icon="🎶",
-#     layout="centered"
-# )
-def esqueleto():
-    st.markdown("""
-        <style>
-        /* Fundo da página */
-        .main {
-            background-color: #191414;
-            color: white;
-        }
+    conn = get_connection()
+    if not conn:
+        st.error("Erro ao conectar ao banco de dados.")
+        return
 
-        /* Fundo da barra lateral */
-        section[data-testid="stSidebar"] {
-            background-color: #000000;
-            color: white;
-        }
+    # Obter lista de artistas
+    with conn.cursor() as cur:
+        cur.execute("SELECT id_artista, nome_artista FROM spotify.artistas ORDER BY nome_artista")
+        artistas = cur.fetchall()
 
-        /* Títulos */
-        h1, h2, h3, h4 {
-            color: #1DB954;
-        }
+    if not artistas:
+        st.warning("Nenhum artista encontrado no banco.")
+        return
 
-        /* Métricas */
-        .stMetric {
-            background-color: #121212;
-            padding: 10px;
-            border-radius: 10px;
-        }
+    artistas_dict = {nome: id for id, nome in artistas}
+    nome_artista = st.selectbox("Selecione um artista:", list(artistas_dict.keys()))
 
-        /* Texto padrão */
-        .css-18e3th9 {
-            color: white;
-        }
+    if nome_artista:
+        id_artista = artistas_dict[nome_artista]
 
-        /* Barras de rolagem e detalhes */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
+        # Buscar músicas do artista
+        query = """
+        SELECT m.nome_artistico
+        FROM spotify.musicas m
+        JOIN spotify.musicas_artistas ma ON m.id_musica = ma.id_musica
+        WHERE ma.id_artista = %s
+        ORDER BY m.nome_artistico;
+        """
+        with conn.cursor() as cur:
+            cur.execute(query, (id_artista,))
+            musicas = cur.fetchall()
 
-        ::-webkit-scrollbar-thumb {
-            background: #1DB954;
-            border-radius: 5px;
-        }
-
-        </style>
-    """, unsafe_allow_html=True)
-
-    # Gerar base de dados fictícia
-    np.random.seed(42)
-    datas = pd.date_range(start="2024-01-01", periods=180)
-    categorias = ['Eletrônicos', 'Roupas', 'Alimentos', 'Brinquedos']
-    regioes = ['Sul', 'Sudeste', 'Nordeste', 'Norte', 'Centro-Oeste']
-
-    dados = pd.DataFrame({
-        'Data': np.random.choice(datas, size=500),
-        'Categoria': np.random.choice(categorias, size=500),
-        'Região': np.random.choice(regioes, size=500),
-        'Vendas': np.random.randint(100, 5000, size=500)
-    })
-
-
-    st.title("📊 Dashboard de Vendas")
-
-    with st.sidebar:
-        st.image("frontend\\arq\\logo.png", width=150)
-
-
-    regiao_selecionada = st.sidebar.multiselect(
-        "Região:",
-        options=dados["Região"].unique(),
-        default=dados["Região"].unique()
-    )
-
-    categoria_selecionada = st.sidebar.multiselect(
-        "Categoria:",
-        options=dados["Categoria"].unique(),
-        default=dados["Categoria"].unique()
-    )
-
-
-    dados_filtrados = dados[
-        (dados["Região"].isin(regiao_selecionada)) &
-        (dados["Categoria"].isin(categoria_selecionada))
-    ]   
-
-
-    st.subheader("📌 Indicadores")
-    col1, col2 = st.columns(2)
-    col1.metric("Total de Vendas", f"R$ {dados_filtrados['Vendas'].sum():,.2f}")
-    col2.metric("Média por Venda", f"R$ {dados_filtrados['Vendas'].mean():,.2f}")
-
-    # Gráfico de vendas por data - CORREÇÃO: especificar a coluna 'Vendas'
-    st.subheader("📈 Vendas ao Longo do Tempo")
-    vendas_por_dia = dados_filtrados.groupby('Data')['Vendas'].sum().sort_index()
-    st.line_chart(vendas_por_dia)
-
-    # Gráfico de vendas por categoria - CORREÇÃO: especificar a coluna 'Vendas'
-    st.subheader("📊 Vendas por Categoria")
-    vendas_categoria = dados_filtrados.groupby('Categoria')['Vendas'].sum().sort_values(ascending=False)
-    st.bar_chart(vendas_categoria)
-
-
-    st.subheader("🗃️ Dados Detalhados")
-    st.dataframe(dados_filtrados.sort_values(by="Data", ascending=False))
-    # def music():
-    #     st.title("Dashboard Musical")
-    #     st.write("Análise de streaming e catálogo")
-        
-    #     if st.button("← Voltar ao Analytics Hub"):
-    #         st.switch_page("../home.py")
-
-    # if __name__ == "__main__":
-    #     music()
+        if musicas:
+            df_musicas = pd.DataFrame(musicas, columns=["Música"])
+            st.write(f"🎶 Músicas de **{nome_artista}**:")
+            st.dataframe(df_musicas, use_container_width=True)
+        else:
+            st.info("Este artista não possui músicas cadastradas.")
