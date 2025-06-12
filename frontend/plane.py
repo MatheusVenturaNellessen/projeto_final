@@ -4,6 +4,8 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 import plotly.express as px
+from streamlit_folium import st_folium
+import folium
 
 # ============== CONFIG E DADOS ==============
 def plane():
@@ -18,23 +20,28 @@ def plane():
                 margin: 10px; padding: 20px;
                 text-align: center;
             }
-                
+            
             .container:hover {
                 filter: opacity(1);
-                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
+                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                transition: all 0.5s ease; 
             }
-                
+
             .title {
                 font-size: 1.25em;
-                font-weight: 600;   
+                font-weight: 900;   
             }
                 
             .text {
-                font-size: 1.25em;
+                color: #29846A;
+                font-size: 2em;
+                font-weight: 600;
             }
                 
             .subtext {
-                font-size: 1.25em;
+                color: #29846A;
+                font-size: 2em;
+                font-weight: 600;
             }
             
             .info {
@@ -42,6 +49,40 @@ def plane():
                 font-size: 1em;
                 font-weight: 600;
                 text-align: left;    
+            }
+                
+            .container-m {
+                background-color: white;
+                filter: opacity(0.9);
+                min-height: 200px;
+                border-radius: 15px;
+                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+                margin: 5px; padding: 10px;
+                text-align: center;
+            }
+            
+            .container-m:hover {
+                filter: opacity(1);
+                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                transition: all 0.5s ease; 
+            }
+
+            .title-m {
+                font-size: 1.5em;
+                font-weight: 900;   
+            }
+                
+            .text-m {
+                color: #29846A;
+                font-size: 3em;
+                font-weight: 600;
+            }
+            
+            .info-m {
+                color: #302681;
+                font-size: 0.8em;
+                font-weight: 600;
+                text-align: justify;    
             }
 
             h1 {
@@ -54,7 +95,7 @@ def plane():
             }
 
             .emoji-after:hover::after {
-                content: "👆"
+                content: "👇"
             }
                 
             .g-title {
@@ -127,57 +168,73 @@ def plane():
                 </div>
             ''', unsafe_allow_html=True)
 
-        with st.expander('Clique aqui para visualizar ruídos.'):
-            colunas_numericas = ['passageiros_pagos', 'passageiros_gratis', 'carga_paga_kg', 'carga_gratis_kg', 'correios_kg', 'ask', 'rpk', 'atk', 'rtk', 'combustivel_litros', 'distancia_voada_km', 'decolagens', 'carga_paga_km', 'carga_gratis_km', 'correio_km', 'assentos', 'payload', 'HORAS_VOADAS', 'bagagem_kg']
+        coordenadas_aeroportos = {
+            "SBGR": (-23.4356, -46.4731),  # Guarulhos
+            "SBGL": (-22.8089, -43.2436),  # Galeão - RJ
+            "SBEG": (-3.0386, -60.0497),   # Manaus
+            "SKBO": (4.7016, -74.1469),    # Bogotá
+            "SYCJ": (6.4986, -58.2541),    # Georgetown
+            "KDFW": (32.8998, -97.0403),   # Dallas
+        }
 
-            st.sidebar.markdown('''
-                <h2 class="emoji-after">Personalize as Métricas!</h2>
-            ''', unsafe_allow_html=True)
-            empresas = sorted(df['empresa_sigla'].unique())
-            default = sorted(['AZU', 'LAN', 'GLO', 'AAL', 'UAE'])
-            empresas_selecionadas = st.sidebar.multiselect("Selecione as empresas", empresas, default=list(default))
+        # Filtrar voos de Guarulhos com destinos conhecidos no mapa
+        df_guarulhos = df[
+            (df["aeroporto_origem_sigla"] == "SBGR") &
+            (df["aeroporto_destino_sigla"].isin(coordenadas_aeroportos.keys()))
+        ].copy()
 
-            # coluna = st.sidebar.selectbox("Selecione um atributo:", colunas_numericas)
+        # Criar o mapa
+        mapa = folium.Map(location=[-23.4356, -46.4731], zoom_start=4)
 
-            x_col = st.sidebar.selectbox("Coluna do eixo X (horizontal):", colunas_numericas, index=0, help='O gráfico de dispersão mostra a relação entre dois atributos selecionados. Pontos alinhados indicam correlação entre as variáveis, enquanto pontos espalhados mostram pouca relação. As cores representam diferentes empresas e pontos isolados podem indicar erros ou situações fora do padrão.')
-            y_col = st.sidebar.selectbox("Coluna do eixo Y (vertical):", colunas_numericas, index=1)
+        # Lista para tabela de visualização
+        dados_voos = []
 
-            df_filtrado = df[df['empresa_sigla'].isin(empresas_selecionadas)]
+        for _, row in df_guarulhos.iterrows():
+            destino_sigla = row["aeroporto_destino_sigla"]
+            destino_nome = row["aeroporto_destino_nome"]
+            origem_coords = coordenadas_aeroportos["SBGR"]
+            destino_coords = coordenadas_aeroportos[destino_sigla]
 
-            # Boxplot com Plotly
-            fig = px.scatter(
-                df_filtrado,
-                x=x_col,
-                y=y_col,
-                color="empresa_sigla",
-                hover_data=["empresa_nome", "ano", "mes", "aeroporto_origem_sigla", "aeroporto_destino_sigla"],  # infos extras ao passar mouse
-                title=f"Dispersão de {y_col} vs. {x_col} por Empresa",
-                labels={x_col: x_col, y_col: y_col, "empresa_sigla": "Empresa"},
-            )
-            st.plotly_chart(fig, use_container_width=True)
+            # Adiciona marcador e linha no mapa
+            folium.Marker(
+                location=destino_coords,
+                popup=f"{destino_nome} ({destino_sigla})",
+                icon=folium.Icon(color='red', icon='plane-arrival', prefix='fa')
+            ).add_to(mapa)
 
-            # Coeficiente de Variação (opcional: para cada eixo)
-            st.subheader("Coeficiente de Variação (por empresa)")
-            cv_x = df_filtrado.groupby("empresa_sigla")[x_col].std() / df_filtrado.groupby("empresa_sigla")[x_col].mean()
-            cv_y = df_filtrado.groupby("empresa_sigla")[y_col].std() / df_filtrado.groupby("empresa_sigla")[y_col].mean()
-            st.dataframe(pd.DataFrame({f"CV {x_col}": cv_x.round(3), f"CV {y_col}": cv_y.round(3)}))
+            folium.PolyLine([origem_coords, destino_coords], color='blue', weight=2).add_to(mapa)
 
-            # Quantidade de outliers usando IQR para ambos eixos
-            def conta_outliers(s):
-                q1 = s.quantile(0.25)
-                q3 = s.quantile(0.75)
-                iqr = q3 - q1
-                return ((s < (q1 - 1.5 * iqr)) | (s > (q3 + 1.5 * iqr))).sum()
-            outliers_x = df_filtrado.groupby("empresa_sigla")[x_col].apply(conta_outliers)
-            outliers_y = df_filtrado.groupby("empresa_sigla")[y_col].apply(conta_outliers)
+            # Adiciona descrição à lista de voos mostrados
+            dados_voos.append({
+                "Origem": "Guarulhos (SBGR)",
+                "Destino": f"{destino_nome} ({destino_sigla})",
+                "Descrição": f"Voo de Guarulhos (SBGR) para {destino_nome} ({destino_sigla})"
+            })
 
-            st.markdown('''<h2>Quantidade de Outliers (por empresa)</h2>''', unsafe_allow_html=True)
+        # Adicionar marcador de origem
+        folium.Marker(
+            location=coordenadas_aeroportos["SBGR"],
+            popup="Guarulhos (SBGR)",
+            icon=folium.Icon(color='green', icon='plane-departure', prefix='fa')
+        ).add_to(mapa)
 
-            st.dataframe(pd.DataFrame({f"Qtd de Outliers ({x_col})": outliers_x, f"Qtd de Outliers ({y_col})": outliers_y}))
 
-            st.markdown('''
-    	        <div class="info">Outliers</div>
-            ''', unsafe_allow_html=True)
+        st.markdown('''<hr><h2>Voos com origem em Guarulhos (SBGR)''', unsafe_allow_html=True)
+        
+        st_folium(mapa, use_container_width=True, height=500)
+
+        st.markdown("""
+        <div style="border: 2px solid #302681; border-radius: 12px; padding: 20px; background-color: #f9f9f9;">
+        <h3 style="color:#302681; text-align: center;">ℹ️ Informações dos voos</h3>
+        <ul style="font-size:16px; line-height:1.6;">
+            <li><strong>Guarulhos (SBGR) → Galeão - RJ (SBGL)</strong><br>Voo doméstico, conectando São Paulo ao Rio de Janeiro.</li>
+            <li><strong>Guarulhos (SBGR) → Manaus (SBEG)</strong><br>Rota nacional, do sudeste ao norte do Brasil.</li>
+            <li><strong>Guarulhos (SBGR) → Bogotá - Colômbia (SKBO)</strong><br>Voo internacional para a capital colombiana.</li>
+            <li><strong>Guarulhos (SBGR) → Georgetown - Guiana (SYCJ)</strong><br>Voo internacional para a capital da Guiana.</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
 
     # ============= MÉTRICAS =============
     if page == "Métricas":
@@ -194,34 +251,34 @@ def plane():
         col4, col5, col6, col7 = st.columns(4)
         with col4:
             st.markdown(f'''
-                <div class="container">
-                    <div class="title">RPK</div>
-                    <div class="text">{(agg.rpk.iloc[-1] / 1e9):.2f}</div>
-                    <div class="info">Ipsum lorem</div>
+                <div class="container-m">
+                    <div class="title-m">RPK</div>
+                    <div class="text-m">{(agg.rpk.iloc[-1] / 1e9):.2f}</div>
+                    <div class="info-m"> Quantidade total de passageiros transportados multiplicada pela distância voada.</div>
                 </div>
             ''', unsafe_allow_html=True)
         with col5:
             st.markdown(f'''
-                <div class="container">
-                    <div class="title">ASK</div>
-                    <div class="text">{(agg.ask.iloc[-1] / 1e9):.2f}</div>
-                    <div class="info">Ipsum lorem</div>
+                <div class="container-m">
+                    <div class="title-m">ASK</div>
+                    <div class="text-m">{(agg.ask.iloc[-1] / 1e9):.2f}</div>
+                    <div class="info-m">Capacidade total de transporte de passageiros.</div>
                 </div>
             ''', unsafe_allow_html=True)
         with col6:
             st.markdown(f'''
-                <div class="container">
-                    <div class="title">Load Factor (%)</div>
-                    <div class="text">{(agg.load_factor.iloc[-1]):.2f}</div>
-                    <div class="info">Ipsum lorem</div>
+                <div class="container-m">
+                    <div class="title-m">Load Factor (%)</div>
+                    <div class="text-m">{(agg.load_factor.iloc[-1]):.2f}</div>
+                    <div class="info-m">Porcentagem de ocupação dos assentos disponíveis.</div>
                 </div>
             ''', unsafe_allow_html=True)
         with col7:
             st.markdown(f'''
-                <div class="container">
-                    <div class="title">Eficiência Carga (%)</div>
-                    <div class="text">{(agg.eficiencia_carga.iloc[-1]):.2f}</div>
-                    <div class="info">Ipsum lorem</div>
+                <div class="container-m">
+                    <div class="title-m">Eficiência Carga (%)</div>
+                    <div class="text-m">{(agg.eficiencia_carga.iloc[-1]):.2f}</div>
+                    <div class="info-m">Porcentagem da capacidade total de carga utilizada.</div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -369,9 +426,80 @@ def plane():
         
         <p style="text-align: justify">⚠️ Em caso de dúvidas ou sugestões, entre em contato pelo e-mail <a href="mailto:exemplo@email.com">exemplo@email.com</a>.</p>
 
-        <hr>
+        <hr>''', unsafe_allow_html=True)
 
-        <p style="text-align: justify">Esta aplicação foi desenvolvida por <a href="https://www.linkedin.com/in/dev-matheusvn/" target="_blank">Matheus Ventura Nellessen</a>, <a href="" target="_blank">André</a>, <a href="" target="_blank">Heitor</a> e <a href="" target="_blank">Leonardo</a> como projeto final da capacitação em <i>Analytics</i>.</p>
+        with st.expander('Clique aqui para visualizar ruídos.'):
+            colunas_numericas = ['passageiros_pagos', 'passageiros_gratis', 'carga_paga_kg', 'carga_gratis_kg', 'correios_kg', 'ask', 'rpk', 'atk', 'rtk', 'combustivel_litros', 'distancia_voada_km', 'decolagens', 'carga_paga_km', 'carga_gratis_km', 'correio_km', 'assentos', 'payload', 'HORAS_VOADAS', 'bagagem_kg']
+
+            st.sidebar.markdown('''
+                <h2 class="emoji-after">Personalize as Métricas!</h2>
+            ''', unsafe_allow_html=True)
+            empresas = sorted(df['empresa_sigla'].unique())
+            default = sorted(['AZU', 'LAN', 'GLO', 'AAL', 'UAE'])
+
+            if 'empresas_selecionadas' not in st.session_state:
+                st.session_state.empresas_selecionadas = list(default)
+
+            if st.sidebar.button('Resetar Filtro'):
+                st.session_state.empresas_selecionadas = list(default)
+
+            empresas_selecionadas = st.sidebar.multiselect(
+                "Selecione as empresas", 
+                empresas, 
+                default=st.session_state.empresas_selecionadas,
+                key='empresas_selecionadas'
+            )
+
+            x_col = st.sidebar.selectbox("Coluna do eixo X (horizontal):", colunas_numericas, index=0, help='O gráfico de dispersão mostra a relação entre dois atributos selecionados. Pontos alinhados indicam correlação entre as variáveis, enquanto pontos espalhados mostram pouca relação. As cores representam diferentes empresas e pontos isolados podem indicar erros ou situações fora do padrão.')
+            y_col = st.sidebar.selectbox("Coluna do eixo Y (vertical):", colunas_numericas, index=1)
+
+            df_filtrado = df[df['empresa_sigla'].isin(empresas_selecionadas)]
+
+            # Boxplot com Plotly
+            fig = px.scatter(
+                df_filtrado,
+                x=x_col,
+                y=y_col,
+                color="empresa_sigla",
+                hover_data=["empresa_nome", "ano", "mes", "aeroporto_origem_sigla", "aeroporto_destino_sigla"],  # infos extras ao passar mouse
+                title=f"Dispersão de {y_col} vs. {x_col} por Empresa",
+                labels={x_col: x_col, y_col: y_col, "empresa_sigla": "Empresa"},
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+            # Coeficiente de Variação (opcional: para cada eixo)
+            cv_x = df_filtrado.groupby("empresa_sigla")[x_col].std() / df_filtrado.groupby("empresa_sigla")[x_col].mean()
+            cv_y = df_filtrado.groupby("empresa_sigla")[y_col].std() / df_filtrado.groupby("empresa_sigla")[y_col].mean()
+
+            st.markdown('''<h2>Coeficiente de Variação (por empresa)</h2>''', unsafe_allow_html=True)
+
+            st.dataframe(pd.DataFrame({f"C.V. ({x_col})": cv_x.round(3), f"C.V. ({y_col})": cv_y.round(3)}))
+
+            st.markdown('''
+                <div class="info">ℹ️ O <i>Coeficiente de Variação</i> (C.V.) mede o quanto os valores de uma variável são dispersos em relação à sua média. Quanto maior a porcentagem, mais instável ou inconsistente é aquela variável</div>
+            ''', unsafe_allow_html=True)
+
+            # Quantidade de outliers usando IQR para ambos eixos
+            def conta_outliers(s):
+                q1 = s.quantile(0.25)
+                q3 = s.quantile(0.75)
+                iqr = q3 - q1
+                return ((s < (q1 - 1.5 * iqr)) | (s > (q3 + 1.5 * iqr))).sum()
+            outliers_x = df_filtrado.groupby("empresa_sigla")[x_col].apply(conta_outliers)
+            outliers_y = df_filtrado.groupby("empresa_sigla")[y_col].apply(conta_outliers)
+
+            st.markdown('''<h2>Quantidade de Outliers (por empresa)</h2>''', unsafe_allow_html=True)
+
+            st.dataframe(pd.DataFrame({f"Qtd de Outliers ({x_col})": outliers_x, f"Qtd de Outliers ({y_col})": outliers_y}))
+
+            st.markdown('''
+                <div class="info">ℹ️ <i>Outlier</i> é um valor que se destaca dos demais em um conjunto de dados, sendo muito diferente do padrão ou da maioria dos outros valores.</div>
+            ''', unsafe_allow_html=True)
+
+        st.markdown('''
+            <hr>
+            
+            <p style="text-align: justify">Esta aplicação foi desenvolvida por <a href="https://www.linkedin.com/in/dev-matheusvn/" target="_blank">Matheus Ventura Nellessen</a>, <a href="" target="_blank">André</a>, <a href="" target="_blank">Heitor</a> e <a href="" target="_blank">Leonardo</a> como projeto final da capacitação em <i>Analytics</i>.</p>
                     
-        <p style="text-align: justify">Agradecimentos especiais a instrutora <a href="https://www.linkedin.com/in/daniella-torelli-3464b81a9/" target="_blank">Daniella Torelli</a>, profissional repleta de habilidades para ensinar, responsável pela nossa capacitação técnica nesta nova área.</p>                
+            <p style="text-align: justify">Agradecimentos especiais a instrutora <a href="https://www.linkedin.com/in/daniella-torelli-3464b81a9/" target="_blank">Daniella Torelli</a>, profissional repleta de habilidades para ensinar, responsável pela nossa capacitação técnica nesta nova área.</p>                
         ''', unsafe_allow_html=True)
