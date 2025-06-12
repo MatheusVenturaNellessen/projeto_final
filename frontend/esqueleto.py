@@ -3,8 +3,6 @@ import pandas as pd
 import plotly.express as px
 from streamlit_extras.metric_cards import style_metric_cards
 
-
-
 def esqueleto():
     st.sidebar.image("frontend\\image\\music.png", width=150)
 

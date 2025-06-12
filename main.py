@@ -1,7 +1,4 @@
 import streamlit as st
-from PIL import Image
-import base64
-import io
 import frontend.plane as pln
 import frontend.esqueleto as esq
 
@@ -11,7 +8,7 @@ if 'active_tab' not in st.session_state:
     st.session_state.active_tab = 'plane'
 
 with st.sidebar:
-    col1, col2 = st.sidebar.columns([3, 1])
+    col1, col2 = st.sidebar.columns([1, 3])
 
     with col1:
         btn_plane = st.button('Plane', key='btn_plane')
