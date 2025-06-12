@@ -425,65 +425,65 @@ def plane():
         df_filtrado = df[df['empresa_sigla'].isin(st.session_state['empresas_selecionadas'])]
 
         # ============= 1º Gráfico =============
-        st.markdown('''<h3 class="g-title">Fator de Ocupação (RPK / ASK) por Empresa</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Fator de Ocupação (RPK / ASK)</h3>''', unsafe_allow_html=True)
         df_f_ocupacao = df_filtrado.groupby(['data', 'empresa_sigla'])['fator_ocupacao'].mean().reset_index()
         df_pivot_f_ocupacao = df_f_ocupacao.pivot(index='data', columns='empresa_sigla', values='fator_ocupacao').fillna(0)
-        st.line_chart(df_pivot_f_ocupacao)
+        st.line_chart(df_pivot_f_ocupacao, x_label='Período', y_label='Coeficiente F.O.')
 
         st.markdown('''<p><b>Análise</b>: Quanto mais próximo de 1.0 (100%), melhor o uso dos assentos disponíveis.</p>''', unsafe_allow_html=True)
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 2º Gráfico =============
-        st.markdown('''<h3 class="g-title">Fator de Carga (RTK / ATK) por Empresa</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Fator de Carga (RTK / ATK)</h3>''', unsafe_allow_html=True)
 
         df_f_carga = df_filtrado.groupby(['data', 'empresa_sigla'])['fator_carga'].mean().reset_index()
         df_pivot_f_carga = df_f_carga.pivot(index='data', columns='empresa_sigla', values='fator_carga').fillna(0)
-        st.line_chart(df_pivot_f_carga)
+        st.line_chart(df_pivot_f_carga, x_label='Período', y_label='Coeficiente F.C.')
 
         st.markdown('''<p><b>Análise</b>: Valores mais baixos representam muita capacidade ociosa.</p>''', unsafe_allow_html=True)
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 3º Gráfico =============
-        st.markdown('''<h3 class="g-title">Média de Passageiros por Decolagem</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Média de Passageiros por Voo</h3>''', unsafe_allow_html=True)
 
         df_passageiros_decolagem = df_filtrado.groupby(['data', 'empresa_sigla'])['passageiros_por_decolagem'].mean().reset_index()
         df_pivot_passageiros_decolagem = df_passageiros_decolagem.pivot(index='data', columns='empresa_sigla', values='passageiros_por_decolagem').fillna(0)
-        st.line_chart(df_pivot_passageiros_decolagem)
+        st.line_chart(df_pivot_passageiros_decolagem, x_label='Período', y_label='Média de Passageiros')
 
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 4º Gráfico =============
-        st.markdown('''<h3 class="g-title">Média de Carga Total por Voo (em Kg)</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Carga Total Média por Voo (em quilogramas)</h3>''', unsafe_allow_html=True)
 
         df_carga_voo = df_filtrado.groupby(['data', 'empresa_sigla'])['carga_por_voo'].mean().reset_index()
         df_pivot_carga_voo = df_carga_voo.pivot(index='data', columns='empresa_sigla', values='carga_por_voo').fillna(0)
-        st.line_chart(df_pivot_carga_voo)
+        st.line_chart(df_pivot_carga_voo, x_label='Período', y_label='Média de Carga Total (Kg)')
     
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 5º Gráfico =============
-        st.markdown('''<h3 class="g-title">Distância Média por Voo (em Km)</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Distância Média por Voo (em quilômetros)</h3>''', unsafe_allow_html=True)
         df_distancia_voo = df_filtrado.groupby(['data', 'empresa_sigla'])['distancia_por_voo'].mean().reset_index()
         df_pivot_distancia_voo = df_distancia_voo.pivot(index='data', columns='empresa_sigla', values='distancia_por_voo').fillna(0)
-        st.line_chart(df_pivot_distancia_voo)
+        st.line_chart(df_pivot_distancia_voo, x_label='Período', y_label='Distância Média Percorrida (Km)')
 
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 6º Gráfico =============
-        st.markdown('''<h3 class="g-title">Combustível por Passageiro (em litros)</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Combustível Médio por Passageiro (em litros)</h3>''', unsafe_allow_html=True)
 
         df_combustivel_passageiro = df_filtrado.groupby(['data', 'empresa_sigla'])['combustivel_por_passageiro'].mean().reset_index()
         df_pivot_combustivel_passageiro = df_combustivel_passageiro.pivot(index='data', columns='empresa_sigla', values='combustivel_por_passageiro').fillna(0)
-        st.line_chart(df_pivot_combustivel_passageiro)
+        st.line_chart(df_pivot_combustivel_passageiro, x_label='Período', y_label='Combustível Médio (L)')
 
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 7º Gráfico =============
-        st.markdown('''<h3 class="g-title">Assentos por Voo</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Quantidade Média de Assentos por Voo</h3>''', unsafe_allow_html=True)
 
         df_assentos_voo = df_filtrado.groupby(['data', 'empresa_sigla'])['assentos_por_voo'].mean().reset_index()
         df_pivot_assentos_voo = df_assentos_voo.pivot(index='data', columns='empresa_sigla', values='assentos_por_voo').fillna(0)
-        st.line_chart(df_pivot_assentos_voo)
+        st.line_chart(df_pivot_assentos_voo, x_label='Período', y_label='Qtd. Média de Assentos')
 
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
@@ -492,71 +492,10 @@ def plane():
 
         df_payload_efficiency = df_filtrado.groupby(['data', 'empresa_sigla'])['payload_efficiency'].mean().reset_index()
         df_payload_efficiency = df_payload_efficiency.pivot(index='data', columns='empresa_sigla', values='payload_efficiency').fillna(0)
-        st.line_chart(df_payload_efficiency)
+        st.line_chart(df_payload_efficiency, x_label='Período', y_label='Payload Efficiency')
 
         st.markdown('''<p><b>Análise</b>: Quanto maior o coeficiente, maior a capacidade total utilizada.</p>''', unsafe_allow_html=True)
 
-        # datas_disponiveis = sorted(df['data'].dt.to_period('M').unique().astype(str))
-        # data_selecionada = st.sidebar.selectbox("Selecione o mês:", datas_disponiveis)
-        # df['periodo'] = df['data'].dt.to_period('M').astype(str)
-        # df = df[df['periodo'] == data_selecionada]
-
-        # # Filtro de empresas
-        # empresas_especificas = sorted(['AZU', 'LAN', 'GLO', 'AAL', 'UAE'])
-        # if 'empresas_selecionadas' not in st.session_state:
-        #     st.session_state['empresas_selecionadas'] = empresas_especificas
-
-        # if st.sidebar.button("Resetar Filtro"):
-        #     st.session_state['empresas_selecionadas'] = empresas_especificas
-
-        # empresas_selecionadas = st.sidebar.multiselect(
-        #     "Selecione as empresas (por sigla):",
-        #     options=sorted(df['empresa_sigla'].unique()),
-        #     default=st.session_state['empresas_selecionadas'],
-        #     key='empresas_selecionadas'
-        # )
-
-        # df_filtrado = df[df['empresa_sigla'].isin(empresas_selecionadas)]
-
-        # # Gráfico 1 – Fator de Ocupação (RPK / ASK)
-        # st.markdown("### Fator de Ocupação por Empresa")
-        # dados = df_filtrado.groupby('empresa_sigla')['fator_ocupacao'].mean()
-        # st.bar_chart(dados)
-
-        # # Gráfico 2 – Fator de Carga (RTK / ATK)
-        # st.markdown("### Fator de Carga por Empresa")
-        # dados = df_filtrado.groupby('empresa_sigla')['fator_carga'].mean()
-        # st.area_chart(dados)
-
-        # # Gráfico 3 – Passageiros por Decolagem
-        # st.markdown("### Passageiros por Decolagem")
-        # dados = df_filtrado.groupby('empresa_sigla')['passageiros_por_decolagem'].mean()
-        # st.bar_chart(dados)
-
-        # # Gráfico 4 – Carga por Voo
-        # st.markdown("### Carga Total por Voo (Kg)")
-        # dados = df_filtrado.groupby('empresa_sigla')['carga_por_voo'].mean()
-        # st.bar_chart(dados)
-
-        # # Gráfico 5 – Distância Média por Voo
-        # st.markdown("### Distância Média por Voo (Km)")
-        # dados = df_filtrado.groupby('empresa_sigla')['distancia_por_voo'].mean()
-        # st.area_chart(dados)
-
-        # # Gráfico 6 – Combustível por Passageiro
-        # st.markdown("### Combustível por Passageiro (litros)")
-        # dados = df_filtrado.groupby('empresa_sigla')['combustivel_por_passageiro'].mean()
-        # st.bar_chart(dados)
-
-        # # Gráfico 7 – Assentos por Voo
-        # st.markdown("### Assentos por Voo")
-        # dados = df_filtrado.groupby('empresa_sigla')['assentos_por_voo'].mean()
-        # st.line_chart(dados)
-
-        # # Gráfico 8 – Eficiência da Carga Útil (Payload)
-        # st.markdown("### Eficiência da Carga Útil")
-        # dados = df_filtrado.groupby('empresa_sigla')['payload_efficiency'].mean()
-        # st.bar_chart(dados)
     # ============= INSIGHTS =============
     if page == "Insights":
         st.markdown('''<h3>Olá mundo!</h3>''', unsafe_allow_html=True)
