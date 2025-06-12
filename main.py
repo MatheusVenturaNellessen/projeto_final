@@ -4,21 +4,21 @@ import base64
 import io
 import frontend.plane as pln
 import frontend.esqueleto as esq
-st.set_page_config(page_title="Dashboard Aviação", page_icon="✈️", layout="wide")
+
+st.set_page_config(page_title="Aviação & Music | Dashboards", page_icon="📊", layout="wide")
 
 if 'active_tab' not in st.session_state:
     st.session_state.active_tab = 'plane'
 
 with st.sidebar:
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.sidebar.columns([3, 1])
 
-    with col3:
-        st.write('')
-    with col2:
-        btn_plane = st.button('Plane', key='btn_plane')
     with col1:
+        btn_plane = st.button('Plane', key='btn_plane')
+    with col2:
         btn_esqueleto = st.button('Music', key='btn_esqueleto')
-    st.divider()
+
+    st.markdown('''<hr>''', unsafe_allow_html=True)
 
     # Atualiza o estado quando um botão é clicado
     if btn_plane:
