@@ -138,12 +138,80 @@ if page == "Visão Geral":
 
 # ============= MÉTRICAS =============
 if page == "Métricas":
-    st.markdown('''<h3>Olá mundo!</h3>''', unsafe_allow_html=True)
+    st.markdown('''<h1>🏆 Top 5 Empresas</h1>''', unsafe_allow_html=True)
+
+    agg = (df.groupby("data")[["rpk", "ask", "atk", "rtk"]]
+        .sum()
+        .assign(load_factor=lambda x: 100 * x.rpk / x.ask.replace(0, np.nan),
+                eficiencia_carga=lambda x: 100 * x.rtk / x.atk.replace(0, np.nan))
+        .fillna(0)
+        .reset_index())
+
+    # Cards customizados
+    col4, col5, col6, col7 = st.columns(4)
+    with col4:
+        st.markdown(f'''
+            <div class="container">
+                <div class="title">RPK</div>
+                <div class="text">{(agg.rpk.iloc[-1] / 1e9):.2f}</div>
+                <div class="info">Ipsum lorem</div>
+            </div>
+        ''', unsafe_allow_html=True)
+    with col5:
+        st.markdown(f'''
+            <div class="container">
+                <div class="title">ASK</div>
+                <div class="text">{(agg.ask.iloc[-1] / 1e9):.2f}</div>
+                <div class="info">Ipsum lorem</div>
+            </div>
+        ''', unsafe_allow_html=True)
+    with col6:
+        st.markdown(f'''
+            <div class="container">
+                <div class="title">Load Factor (%)</div>
+                <div class="text">{(agg.load_factor.iloc[-1]):.2f}</div>
+                <div class="info">Ipsum lorem</div>
+            </div>
+        ''', unsafe_allow_html=True)
+    with col7:
+        st.markdown(f'''
+            <div class="container">
+                <div class="title">Eficiência Carga (%)</div>
+                <div class="text">{(agg.eficiencia_carga.iloc[-1]):.2f}</div>
+                <div class="info">Ipsum lorem</div>
+            </div>
+        ''', unsafe_allow_html=True)
+
+    opcoes = ["rpk", "ask", "load_factor", "rtk", "atk", "eficiencia_carga"]
+
+    st.sidebar.markdown('''
+        <h2 class="emoji-after">Personalize as Métricas!</h2>
+    ''', unsafe_allow_html=True)
+    metrica_rank = st.sidebar.selectbox("Escolha a métrica:", options=opcoes, index=0)
+
+    ultimo_mes = df["data"].max()
+    base = df[df["data"] == ultimo_mes]
+
+    if metrica_rank in ["load_factor", "eficiencia_carga"]:
+        tbl = (base.groupby("empresa_sigla")[["rpk", "ask", "rtk", "atk"]].sum())
+        tbl["load_factor"] = 100 * tbl["rpk"] / tbl["ask"].replace(0, np.nan)
+        tbl["eficiencia_carga"] = 100 * tbl["rtk"] / tbl["atk"].replace(0, np.nan)
+        top5 = tbl[metrica_rank].nlargest(5).reset_index()
+    else:
+        top5 = (base.groupby("empresa_sigla")[metrica_rank].sum().nlargest(5).reset_index())
+
+
+    st.markdown('''<hr>''', unsafe_allow_html=True)
+    st.markdown('''<h2>Histograma: Métricas por Empresa</h2>''', unsafe_allow_html=True)
+    st.bar_chart(top5.set_index("empresa_sigla")[metrica_rank], use_container_width=True, x_label='Top 5 Empresas', y_label='Valor da Métrica')
+
+    st.markdown('''<hr>''', unsafe_allow_html=True)
+    st.markdown('''<h2>SQL View: Métricas por Empresa</h2>''', unsafe_allow_html=True)
+    st.dataframe(top5, use_container_width=True)
+
 
 # ============= ANÁLISES GRÁFICAS =============
 if page == "Análises Gráficas":
-    # st.markdown('''<h1>📈 Métricas e Gráficos de Desempenho</h1>''', unsafe_allow_html=True)
-
     # Adiciona empresas únicas
     empresas_unique = sorted(df['empresa_sigla'].unique()) # acho que essa linha é desnecessária, ACHO
     empresas_especificas = sorted(['AZU', 'LAN', 'GLO', 'AAL', 'UAE'])
