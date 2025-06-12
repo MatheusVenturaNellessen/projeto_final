@@ -112,3 +112,104 @@ def get_view_dataframe():
     query = "SELECT * FROM vw_metricas_agregadas_ultimo_mes"
     return execute_query(query, return_df=True)
     
+def select_view_rpk():
+    conn = get_connection()
+    if not conn:
+        return None
+    
+    cursor = conn.cursor()
+    query = """
+        SELECT empresa_sigla, rpk
+        FROM vw_metricas_agregadas_ultimo_mes
+        ORDER BY rpk DESC
+        LIMIT 5;
+    """
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conn.close()
+    return pd.DataFrame(data, columns=['empresa_sigla', 'rpk'])
+
+def select_view_ask():
+    conn = get_connection()
+    if not conn:
+        return None
+    cursor = conn.cursor()
+    query = """
+        SELECT empresa_sigla, ask
+        FROM vw_metricas_agregadas_ultimo_mes
+        ORDER BY ask DESC
+        LIMIT 5;
+    """
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conn.close()
+    return pd.DataFrame(data, columns=['empresa_sigla', 'ask'])
+
+def select_view_rtk():
+    conn = get_connection()
+    if not conn:
+        return None
+    
+    cursor = conn.cursor()
+    query = """
+        SELECT empresa_sigla, rtk
+        FROM vw_metricas_agregadas_ultimo_mes
+        ORDER BY rtk DESC
+        LIMIT 5;
+    """
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conn.close()
+    return pd.DataFrame(data, columns=['empresa_sigla', 'rtk'])
+
+def select_view_atk():
+    conn = get_connection()
+    if not conn:
+        return None
+    
+    cursor = conn.cursor()
+    query = """
+        SELECT empresa_sigla, atk
+        FROM vw_metricas_agregadas_ultimo_mes
+        ORDER BY atk DESC
+        LIMIT 5;
+    """
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conn.close()
+    return pd.DataFrame(data, columns=['empresa_sigla', 'atk'])
+
+def select_view_loadfactor():
+    conn = get_connection()
+    if not conn:
+        return None
+    
+    cursor = conn.cursor()
+    query = """
+        SELECT empresa_sigla, load_factor
+        FROM vw_metricas_agregadas_ultimo_mes
+        ORDER BY load_factor DESC
+        LIMIT 5;
+    """
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conn.close()
+    return pd.DataFrame(data, columns=['empresa_sigla', 'load_factor'])
+
+def select_view_eficiencia_carga():
+    conn = get_connection()
+    if not conn:
+        return None
+    
+    cursor = conn.cursor()
+    query = """
+        SELECT empresa_sigla, eficiencia_carga
+        FROM vw_metricas_agregadas_ultimo_mes
+        ORDER BY eficiencia_carga DESC
+        LIMIT 5;
+    """
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conn.close()
+    return pd.DataFrame(data, columns=['empresa_sigla', 'eficiencia_carga'])
+    
