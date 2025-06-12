@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 # ============== CONFIG E DADOS ==============
 def plane():
@@ -124,6 +125,58 @@ def plane():
                     <div class="subtext">{qtd_saindo} saídas</div>
                     <div class="info">Voos internacionais que chegam e partem do Brasil</div>
                 </div>
+            ''', unsafe_allow_html=True)
+
+        with st.expander('Clique aqui para visualizar ruídos.'):
+            colunas_numericas = ['passageiros_pagos', 'passageiros_gratis', 'carga_paga_kg', 'carga_gratis_kg', 'correios_kg', 'ask', 'rpk', 'atk', 'rtk', 'combustivel_litros', 'distancia_voada_km', 'decolagens', 'carga_paga_km', 'carga_gratis_km', 'correio_km', 'assentos', 'payload', 'HORAS_VOADAS', 'bagagem_kg']
+
+            st.sidebar.markdown('''
+                <h2 class="emoji-after">Personalize as Métricas!</h2>
+            ''', unsafe_allow_html=True)
+            empresas = sorted(df['empresa_sigla'].unique())
+            default = sorted(['AZU', 'LAN', 'GLO', 'AAL', 'UAE'])
+            empresas_selecionadas = st.sidebar.multiselect("Selecione as empresas", empresas, default=list(default))
+
+            # coluna = st.sidebar.selectbox("Selecione um atributo:", colunas_numericas)
+
+            x_col = st.sidebar.selectbox("Coluna do eixo X (horizontal):", colunas_numericas, index=0, help='O gráfico de dispersão mostra a relação entre dois atributos selecionados. Pontos alinhados indicam correlação entre as variáveis, enquanto pontos espalhados mostram pouca relação. As cores representam diferentes empresas e pontos isolados podem indicar erros ou situações fora do padrão.')
+            y_col = st.sidebar.selectbox("Coluna do eixo Y (vertical):", colunas_numericas, index=1)
+
+            df_filtrado = df[df['empresa_sigla'].isin(empresas_selecionadas)]
+
+            # Boxplot com Plotly
+            fig = px.scatter(
+                df_filtrado,
+                x=x_col,
+                y=y_col,
+                color="empresa_sigla",
+                hover_data=["empresa_nome", "ano", "mes", "aeroporto_origem_sigla", "aeroporto_destino_sigla"],  # infos extras ao passar mouse
+                title=f"Dispersão de {y_col} vs. {x_col} por Empresa",
+                labels={x_col: x_col, y_col: y_col, "empresa_sigla": "Empresa"},
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+            # Coeficiente de Variação (opcional: para cada eixo)
+            st.subheader("Coeficiente de Variação (por empresa)")
+            cv_x = df_filtrado.groupby("empresa_sigla")[x_col].std() / df_filtrado.groupby("empresa_sigla")[x_col].mean()
+            cv_y = df_filtrado.groupby("empresa_sigla")[y_col].std() / df_filtrado.groupby("empresa_sigla")[y_col].mean()
+            st.dataframe(pd.DataFrame({f"CV {x_col}": cv_x.round(3), f"CV {y_col}": cv_y.round(3)}))
+
+            # Quantidade de outliers usando IQR para ambos eixos
+            def conta_outliers(s):
+                q1 = s.quantile(0.25)
+                q3 = s.quantile(0.75)
+                iqr = q3 - q1
+                return ((s < (q1 - 1.5 * iqr)) | (s > (q3 + 1.5 * iqr))).sum()
+            outliers_x = df_filtrado.groupby("empresa_sigla")[x_col].apply(conta_outliers)
+            outliers_y = df_filtrado.groupby("empresa_sigla")[y_col].apply(conta_outliers)
+
+            st.markdown('''<h2>Quantidade de Outliers (por empresa)</h2>''', unsafe_allow_html=True)
+
+            st.dataframe(pd.DataFrame({f"Qtd de Outliers ({x_col})": outliers_x, f"Qtd de Outliers ({y_col})": outliers_y}))
+
+            st.markdown('''
+    	        <div class="info">Outliers</div>
             ''', unsafe_allow_html=True)
 
     # ============= MÉTRICAS =============
