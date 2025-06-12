@@ -185,7 +185,7 @@ def plane():
         with col2:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Voos Internacionais Brasileiros</div>
+                    <div class="title">Voos Brasileiros</div>
                     <div class="text">{qtd_entrando:,.0f} entradas</div>
                     <div class="subtext">{qtd_saindo:,.0f} saídas</div>
                     <div class="info">Voos internacionais que chegam e partem do Brasil</div>
