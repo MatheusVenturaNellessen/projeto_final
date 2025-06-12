@@ -63,7 +63,7 @@ def plane():
         </style>
     """, unsafe_allow_html=True)
 
-    df = pd.read_csv("database\\anac\\anac_2025_sem_tratar_outliers.csv", sep=';', encoding='latin1')
+    df = pd.read_csv("database\\anac\\anaca_2025_limpo.csv", sep=';', encoding='latin1')
 
     df['ano'] = pd.to_numeric(df['ano'], errors='coerce')
     df['mes'] = pd.to_numeric(df['mes'], errors='coerce')
@@ -81,16 +81,7 @@ def plane():
     df['payload_efficiency'] = (df['payload'] / (df['ask'] + df['atk'])).where((df['ask'] + df['atk']) != 0)
 
     # ============= SIDEBAR INICIAL =============
-    st.sidebar.image("frontend\\arq\\plane.png", width=150)
-
-    # st.sidebar.markdown(
-    #     """
-    #     <div style="display: flex; justify-content: center;">
-    #         <img src="C:\\Users\\mathe\\Documentos\\Development\\projeto_final\\frontend\\arq\\plane.png">
-    #     </div>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
+    st.sidebar.image("frontend\\image\\plane.png", width=150)
 
     st.sidebar.markdown('''<h1 class="emoji-after">Navegue por aqui!</h1>''', unsafe_allow_html=True)
     page = st.sidebar.radio("Ir para:", ["Visão Geral", "Métricas", "Análises Gráficas", "Insights", "Informações"])

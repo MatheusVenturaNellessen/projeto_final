@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-df = pd.read_csv("C:\\Users\\mathe\\Documentos\\Development\\projeto_final_anac\\database\\anac\\anac_2025_sem_tratar_outliers.csv", sep=';', encoding='latin1')
+df = pd.read_csv("database\\anac\\anaca_2025_limpo.csv", sep=';', encoding='latin1')
 
 df['ano'] = pd.to_numeric(df['ano'], errors='coerce')
 df['mes'] = pd.to_numeric(df['mes'], errors='coerce')
