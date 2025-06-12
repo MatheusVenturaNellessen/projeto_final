@@ -9,13 +9,13 @@ if 'active_tab' not in st.session_state:
 
 with st.sidebar:
     st.sidebar.markdown('''
-        <h1>Seja Bem Vindo(a)!</h1>
+        <h1 class="main">Seja Bem Vindo(a)!</h1>
         <style>
-            h1 {
+            h1.main {
                 text-align: center;      
             }
                         
-            h1:hover::before {
+            h1.main:hover::before {
                 content: "👋";            
             }
         </style>
