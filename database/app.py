@@ -7,7 +7,7 @@ from utils.spottify.database import create_tables_spotify, feed_tables_spotify
 
 
 st.set_page_config(page_title="ANAC - Análise de Dados", page_icon=":bar_chart:", layout="wide")
-df = pd.read_csv("C:\\Users\\leona\\projeto_final\\database\\anac\\csv_anac_2025.csv", sep=';', encoding='latin1')
+df = pd.read_csv("database\\anac\\csv_anac_2025.csv", sep=';', encoding='latin1')
 
 
 st.title("ANAC - Análise de Dados")

@@ -3,12 +3,6 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 
-
-# st.set_page_config(
-#     page_title="Analytics Music",
-#     page_icon="🎶",
-#     layout="centered"
-# )
 def esqueleto():
     st.markdown("""
         <style>
@@ -71,7 +65,7 @@ def esqueleto():
     st.title("📊 Dashboard de Vendas")
 
     with st.sidebar:
-        st.image("frontend\\arq\\logo.png", width=150)
+        st.image("frontend\\image\\logo.png", width=150)
 
 
     regiao_selecionada = st.sidebar.multiselect(

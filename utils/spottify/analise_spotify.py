@@ -4,7 +4,7 @@ import streamlit as st
 
 def spotify_csv_cleaning():
     
-    df = pd.read_csv('C:\\Users\\leona\\projeto_final\\database\\spotify\\spotify_2023.csv', sep=',', encoding='latin1', parse_dates=[['released_year', 'released_month', 'released_day']])
+    df = pd.read_csv('database\\spotify\\spotify_2023.csv', sep=',', encoding='latin1', parse_dates=[['released_year', 'released_month', 'released_day']])
     df_bkp = df.copy()
     df = df.drop('key', axis=1)
 
@@ -53,4 +53,4 @@ def spotify_csv_cleaning():
 
     # print(df.info()) # funcionou 
 
-    df.to_csv('C:\\Users\\leona\\projeto_final\\database\\spotify\\spotify_2023_tratado.csv', sep=',', encoding='utf-8', index=False)
+    df.to_csv('database\\spotify\\spotify_2023_tratado.csv', sep=',', encoding='utf-8', index=False)
