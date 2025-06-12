@@ -6,6 +6,8 @@ from streamlit_extras.metric_cards import style_metric_cards
 
 
 def esqueleto():
+    st.sidebar.image("frontend\\image\\music.png", width=150)
+
     page = st.sidebar.radio("Ir para:", ["Visão Geral", "Comparativo Entre Artistas"])
 
     if page == "Visão Geral":

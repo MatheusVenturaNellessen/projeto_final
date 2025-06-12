@@ -5,6 +5,7 @@ import io
 import frontend.plane as pln
 import frontend.esqueleto as esq
 st.set_page_config(page_title="Dashboard Aviação", page_icon="✈️", layout="wide")
+
 if 'active_tab' not in st.session_state:
     st.session_state.active_tab = 'plane'
 
@@ -16,7 +17,7 @@ with st.sidebar:
     with col2:
         btn_plane = st.button('Plane', key='btn_plane')
     with col1:
-        btn_esqueleto = st.button('Spotify', key='btn_esqueleto')
+        btn_esqueleto = st.button('Music', key='btn_esqueleto')
     st.divider()
 
     # Atualiza o estado quando um botão é clicado
