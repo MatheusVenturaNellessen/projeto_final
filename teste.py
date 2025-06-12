@@ -10,13 +10,13 @@ st.set_page_config(page_title="Dashboard Aviação", page_icon="✈️", layout=
 st.markdown("""
     <style>
         .container {
+            background-color: white;
+            filter: opacity(0.9);
+            min-height: 150px;
+            border-radius: 15px;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             margin: 10px; padding: 20px;
             text-align: center;
-            background-color: white;
-            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            min-height: 140px;
-            filter: opacity(0.8);
         }
             
         .container:hover {
@@ -38,7 +38,9 @@ st.markdown("""
         }
         
         .info {
-            font-size: 0.8em;
+            color: #302681;
+            font-size: 1em;
+            font-weight: 600;
             text-align: left;    
         }
 
@@ -47,10 +49,22 @@ st.markdown("""
             text-align: center; 
         }
             
+        h2 {
+            text-align: center;         
+        }
+
+        .emoji-after:hover::after {
+            content: "👆"
+        }
+            
+        .g-title {
+            text-align: center;
+        }            
+        
     </style>
 """, unsafe_allow_html=True)
 
-df = pd.read_csv("C:\\Users\\mathe\\Documentos\\Development\\projeto_final_anac\\database\\anac\\anac_2025_sem_tratar_outliers.csv", sep=';', encoding='latin1')
+df = pd.read_csv("C:/Users/mathe/Documentos/Development/projeto_final/database/anac/anac_2025_sem_tratar_outliers.csv", sep=';', encoding='latin1')
 
 df['ano'] = pd.to_numeric(df['ano'], errors='coerce')
 df['mes'] = pd.to_numeric(df['mes'], errors='coerce')
@@ -67,10 +81,20 @@ df['distancia_por_voo'] = (df['distancia_voada_km'] / df['decolagens']).where(df
 df['assentos_por_voo'] = (df['assentos'] / df['decolagens']).where(df['decolagens'] != 0)
 df['payload_efficiency'] = (df['payload'] / (df['ask'] + df['atk'])).where((df['ask'] + df['atk']) != 0)
 
-# ============= SIDEBAR =============
-st.sidebar.image("C:\\Users\\mathe\\Documentos\\Development\\projeto_final_anac\\frontend\\arq\\plane.png", width=150)
-st.sidebar.title('Navegue por aqui!')
-page = st.sidebar.radio("Ir para:", ["Visão Geral", "Métricas & Gráficos"])
+# ============= SIDEBAR INICIAL =============
+st.sidebar.image("C:/Users/mathe/Documentos/Development/projeto_final/frontend/arq/plane.png", width=150)
+
+# st.sidebar.markdown(
+#     """
+#     <div style="display: flex; justify-content: center;">
+#         <img src="C:\\Users\\mathe\\Documentos\\Development\\projeto_final\\frontend\\arq\\plane.png">
+#     </div>
+#     """,
+#     unsafe_allow_html=True
+# )
+
+st.sidebar.markdown('''<h1 class="emoji-after">Navegue por aqui!</h1>''', unsafe_allow_html=True)
+page = st.sidebar.radio("Ir para:", ["Visão Geral", "Métricas", "Análises Gráficas", "Insights", "Informações"])
 
 # ============= VISÃO GERAL =============
 if page == "Visão Geral":
@@ -112,22 +136,31 @@ if page == "Visão Geral":
             </div>
         ''', unsafe_allow_html=True)
 
-# ============= MÉTRICAS & GRÁFICOS =============
-if page == "Métricas & Gráficos":
-    st.markdown('''📈 Métricas e Gráficos de Desempenho''', unsafe_allow_html=True)
+# ============= MÉTRICAS =============
+if page == "Métricas":
+    st.markdown('''<h3>Olá mundo!</h3>''', unsafe_allow_html=True)
+
+# ============= ANÁLISES GRÁFICAS =============
+if page == "Análises Gráficas":
+    # st.markdown('''<h1>📈 Métricas e Gráficos de Desempenho</h1>''', unsafe_allow_html=True)
 
     # Adiciona empresas únicas
-    empresas_unique = sorted(df['empresa_sigla'].unique())
-    empresas_default = empresas_unique[:5]
+    empresas_unique = sorted(df['empresa_sigla'].unique()) # acho que essa linha é desnecessária, ACHO
+    empresas_especificas = sorted(['AZU', 'LAN', 'GLO', 'AAL', 'UAE'])
+    empresas_default = empresas_especificas
+
+    st.sidebar.markdown('''
+        <h2 class="emoji-after">Personalize os Gráficos!</h2>
+    ''', unsafe_allow_html=True)
 
     if 'empresas_selecionadas' not in st.session_state:
         st.session_state['empresas_selecionadas'] = empresas_default
 
-    if st.button("Resetar Filtro"): # adiciona botão de resetar filtros
+    if st.sidebar.button("Resetar Filtro"): # adiciona botão de resetar filtros
         st.session_state['empresas_selecionadas'] = empresas_default
 
     # Adiciona multiselect com as empresas únicas
-    empresas_selecionadas = st.multiselect(
+    empresas_selecionadas = st.sidebar.multiselect(
         "Selecione as empresas (por sigla):",
         options=empresas_unique,
         default=st.session_state['empresas_selecionadas'],
@@ -137,57 +170,97 @@ if page == "Métricas & Gráficos":
     df_filtrado = df[df['empresa_sigla'].isin(st.session_state['empresas_selecionadas'])]
 
     # ============= 1º Gráfico =============
-    st.subheader("Fator de Ocupação (RPK / ASK) por Empresa")
+    st.markdown('''<h3 class="g-title">Fator de Ocupação (RPK / ASK) por Empresa</h3>''', unsafe_allow_html=True)
     df_f_ocupacao = df_filtrado.groupby(['data', 'empresa_sigla'])['fator_ocupacao'].mean().reset_index()
     df_pivot_f_ocupacao = df_f_ocupacao.pivot(index='data', columns='empresa_sigla', values='fator_ocupacao').fillna(0)
     st.line_chart(df_pivot_f_ocupacao)
-    st.caption("Quanto mais próximo de 1.0 (100%), melhor o uso dos assentos disponíveis.")
+
+    st.markdown('''<p><b>Análise</b>: Quanto mais próximo de 1.0 (100%), melhor o uso dos assentos disponíveis.</p>''', unsafe_allow_html=True)
+    st.markdown('''<hr>''', unsafe_allow_html=True)
 
     # ============= 2º Gráfico =============
-    st.subheader("Fator de Carga (RTK / ATK) por Empresa")
+    st.markdown('''<h3 class="g-title">Fator de Carga (RTK / ATK) por Empresa</h3>''', unsafe_allow_html=True)
+
     df_f_carga = df_filtrado.groupby(['data', 'empresa_sigla'])['fator_carga'].mean().reset_index()
     df_pivot_f_carga = df_f_carga.pivot(index='data', columns='empresa_sigla', values='fator_carga').fillna(0)
     st.line_chart(df_pivot_f_carga)
-    st.caption("Foca em carga útil transportada; valores baixos = muita capacidade ociosa.")
+
+    st.markdown('''<p><b>Análise</b>: Valores mais baixos representam muita capacidade ociosa.</p>''', unsafe_allow_html=True)
+    st.markdown('''<hr>''', unsafe_allow_html=True)
 
     # ============= 3º Gráfico =============
-    st.subheader("Média de Passageiros por Decolagem")
+    st.markdown('''<h3 class="g-title">Média de Passageiros por Decolagem</h3>''', unsafe_allow_html=True)
+
     df_passageiros_decolagem = df_filtrado.groupby(['data', 'empresa_sigla'])['passageiros_por_decolagem'].mean().reset_index()
     df_pivot_passageiros_decolagem = df_passageiros_decolagem.pivot(index='data', columns='empresa_sigla', values='passageiros_por_decolagem').fillna(0)
     st.line_chart(df_pivot_passageiros_decolagem)
-    st.caption("Mostra eficiência de ocupação por voo.")
+
+    st.markdown('''<hr>''', unsafe_allow_html=True)
 
     # ============= 4º Gráfico =============
-    st.subheader("Média de Carga Total por Voo (em Kg)")
+    st.markdown('''<h3 class="g-title">Média de Carga Total por Voo (em Kg)</h3>''', unsafe_allow_html=True)
+
     df_carga_voo = df_filtrado.groupby(['data', 'empresa_sigla'])['carga_por_voo'].mean().reset_index()
     df_pivot_carga_voo = df_carga_voo.pivot(index='data', columns='empresa_sigla', values='carga_por_voo').fillna(0)
     st.line_chart(df_pivot_carga_voo)
-    st.caption("Mede carga útil média por decolagem.")
+  
+    st.markdown('''<hr>''', unsafe_allow_html=True)
 
     # ============= 5º Gráfico =============
-    st.subheader("Distância Média por Voo (em Km)")
+    st.markdown('''<h3 class="g-title">Distância Média por Voo (em Km)</h3>''', unsafe_allow_html=True)
     df_distancia_voo = df_filtrado.groupby(['data', 'empresa_sigla'])['distancia_por_voo'].mean().reset_index()
     df_pivot_distancia_voo = df_distancia_voo.pivot(index='data', columns='empresa_sigla', values='distancia_por_voo').fillna(0)
     st.line_chart(df_pivot_distancia_voo)
-    st.caption("Acompanha evolução das rotas médias.")
+
+    st.markdown('''<hr>''', unsafe_allow_html=True)
 
     # ============= 6º Gráfico =============
-    st.subheader("Combustível por Passageiro (em litros)")
+    st.markdown('''<h3 class="g-title">Combustível por Passageiro (em litros)</h3>''', unsafe_allow_html=True)
+
     df_combustivel_passageiro = df_filtrado.groupby(['data', 'empresa_sigla'])['combustivel_por_passageiro'].mean().reset_index()
     df_pivot_combustivel_passageiro = df_combustivel_passageiro.pivot(index='data', columns='empresa_sigla', values='combustivel_por_passageiro').fillna(0)
     st.line_chart(df_pivot_combustivel_passageiro)
-    st.caption("Mede eficiência de combustível individual.")
+
+    st.markdown('''<hr>''', unsafe_allow_html=True)
 
     # ============= 7º Gráfico =============
-    st.subheader("Assentos por Voo")
+    st.markdown('''<h3 class="g-title">Assentos por Voo</h3>''', unsafe_allow_html=True)
+
     df_assentos_voo = df_filtrado.groupby(['data', 'empresa_sigla'])['assentos_por_voo'].mean().reset_index()
     df_pivot_assentos_voo = df_assentos_voo.pivot(index='data', columns='empresa_sigla', values='assentos_por_voo').fillna(0)
     st.line_chart(df_pivot_assentos_voo)
-    st.caption("Mede capacidade ofertada por voo.")
+
+    st.markdown('''<hr>''', unsafe_allow_html=True)
 
     # ============= 8º Gráfico =============
-    st.subheader("Eficiência da Carga Útil (Payload Efficiency)")
+    st.markdown('''<h3 class="g-title">Eficiência da Carga Útil (Payload Efficiency)</h3>''', unsafe_allow_html=True)
+
     df_payload_efficiency = df_filtrado.groupby(['data', 'empresa_sigla'])['payload_efficiency'].mean().reset_index()
     df_payload_efficiency = df_payload_efficiency.pivot(index='data', columns='empresa_sigla', values='payload_efficiency').fillna(0)
     st.line_chart(df_payload_efficiency)
-    st.caption("Integra passageiro+carga: quanto da capacidade total está sendo utilizada.")
+
+    st.markdown('''<p><b>Análise</b>: Quanto maior o coeficiente, maior a capacidade total utilizada.</p>''', unsafe_allow_html=True)
+
+# ============= INSIGHTS =============
+if page == "Insights":
+    st.markdown('''<h3>Olá mundo!</h3>''', unsafe_allow_html=True)
+
+# ============= INFO =============
+if page == "Informações":
+    st.markdown('''
+    <h3 style="text-align: center">INFO ℹ️</h3>
+
+    <p style="text-align: justify">Essa aplicação foi desenvolvida para facilitar a análise de um grande conjunto de dados sobre voos, reunindo informações de quase 100 companhias aéreas entre <b>janeiro e abril de 2025</b>.</p>
+                
+    <p style="text-align: justify">As funcionalidades incluem filtros dinâmicos, além de visualizações gráficas interativas para apoiar a interpretação dos dados.</p>
+    
+    <p style="text-align: justify">O objetivo é atender profissionais do setor aéreo, analistas de dados e qualquer pessoa interessada em compreender o panorama da aviação comercial no período analisado.</p>
+    
+    <p style="text-align: justify">⚠️ Em caso de dúvidas ou sugestões, entre em contato pelo e-mail <a href="mailto:exemplo@email.com">exemplo@email.com</a>.</p>
+
+    <hr>
+
+    <p style="text-align: justify">Esta aplicação foi desenvolvida por <a href="https://www.linkedin.com/in/dev-matheusvn/" target="_blank">Matheus Ventura Nellessen</a>, <a href="" target="_blank">André</a>, <a href="" target="_blank">Heitor</a> e <a href="" target="_blank">Leonardo</a> como projeto final da capacitação em <i>Analytics</i>.</p>
+                
+    <p style="text-align: justify">Agradecimentos especiais a instrutora <a href="https://www.linkedin.com/in/daniella-torelli-3464b81a9/" target="_blank">Daniella Torelli</a>, profissional repleta de habilidades para ensinar, responsável pela nossa capacitação técnica nesta nova área.</p>                
+    ''', unsafe_allow_html=True)
