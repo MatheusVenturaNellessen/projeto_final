@@ -12,9 +12,13 @@ def plane():
     st.markdown("""
         <style>
             .container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center; 
+                align-items: center;
                 background-color: white;
                 filter: opacity(0.9);
-                min-height: 150px;
+                min-height: 230px;
                 border-radius: 15px;
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
                 margin: 10px; padding: 20px;
@@ -24,7 +28,8 @@ def plane():
             .container:hover {
                 filter: opacity(1);
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-                transition: all 0.5s ease; 
+                border-left: 5px solid #302681;
+                transition: filter box-shadow 0.5s ease; 
             }
 
             .title {
@@ -64,7 +69,8 @@ def plane():
             .container-m:hover {
                 filter: opacity(1);
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-                transition: all 0.5s ease; 
+                border-left: 5px solid #302681;
+                transition: filter box-shadow 0.5s ease;  
             }
 
             .title-m {
