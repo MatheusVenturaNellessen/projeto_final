@@ -5,18 +5,18 @@ import plotly.express as px
 from streamlit_folium import st_folium
 import folium
 
+# display: flex;
+#                 flex-direction: column;
+#                 justify-content: center; 
+#                 align-items: center;
+
 # ============== CONFIG E DADOS ==============
 def plane():
     st.markdown("""
         <style>
             .container {
-                display: flex;
-                flex-direction: column;
-                justify-content: center; 
-                align-items: center;
                 background-color: white;
                 filter: opacity(0.9);
-                min-height: 230px;
                 border-radius: 15px;
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
                 margin: 10px; padding: 20px;
@@ -31,13 +31,14 @@ def plane():
             }
 
             .title {
-                font-size: 1.25em;
-                font-weight: 900;   
+                font-size: 1.1em;
+                font-weight: 900;
+                text-align: left;   
             }
                 
             .text {
                 color: #29846A;
-                font-size: 2em;
+                font-size: 2.5em;
                 font-weight: 600;
             }
                 
@@ -51,13 +52,12 @@ def plane():
                 color: #302681;
                 font-size: 1em;
                 font-weight: 600;
-                text-align: left;    
+                text-align: center;    
             }
                 
             .container-m {
                 background-color: white;
                 filter: opacity(0.9);
-                min-height: 200px;
                 border-radius: 15px;
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
                 margin: 5px; padding: 10px;
@@ -73,20 +73,22 @@ def plane():
 
             .title-m {
                 font-size: 1.5em;
-                font-weight: 900;   
+                font-weight: 900;  
+                text-align: left;    
+ 
             }
                 
             .text-m {
                 color: #29846A;
-                font-size: 3em;
+                font-size: 3.5em;
                 font-weight: 600;
             }
             
             .info-m {
                 color: #302681;
-                font-size: 0.8em;
+                font-size: 1em;
                 font-weight: 600;
-                text-align: justify;    
+                text-align: center;    
             }
 
             h1 {
@@ -106,6 +108,42 @@ def plane():
                 text-align: center;
             }            
             
+            .col1:hover::after {
+                content: "Quantidade total de registros.";
+            }
+                
+            .col2:hover::after {
+                content: "Voos internacionais que chegam (+) e partem (-) do Brasil."
+            }
+            
+            .col6:hover::after {
+                content: "Voos que chegam (+) e partem (-).";    
+            }
+                
+            .col7:hover::after {
+                content: "Total de passageiros transportados.";    
+            }
+                
+            .col8:hover::after {
+                content: "Total de combustível consumido.";    
+            }
+                
+            .col9:hover::after {
+                content: "Total de passageiros vs. pela distância voada.";    
+            }
+            
+            .col10:hover::after {
+                content: "Capacidade total de transporte de passageiros.";    
+            }
+            
+            .col11:hover::after {
+                content: "Porcentagem de ocupação dos assentos disponíveis.";    
+            }
+            
+            .col12:hover::after {
+                content: "Porcentagem da capacidade total de carga utilizada.";    
+            }
+                
         </style>
     """, unsafe_allow_html=True)
 
@@ -169,12 +207,12 @@ def plane():
 
         qtd_registros = df.shape[0]
 
-        qtd_passageiros_total = df['passageiros_pagos'].sum() + df['passageiros_gratis'].sum()
+        # qtd_passageiros_total = df['passageiros_pagos'].sum() + df['passageiros_gratis'].sum()
 
         qtd_combustivel_total = df['combustivel_litros'].sum()
         total_carga_kg = df['carga_paga_kg'].sum()
 
-        qtd_distancia_voada_total = df['distancia_voada_km'].sum() if 'distancia_voada_km' in df.columns else 0
+        # qtd_distancia_voada_total = df['distancia_voada_km'].sum() if 'distancia_voada_km' in df.columns else 0
 
         col1, col2, col3, col4 = st.columns(4)
         with col1:
@@ -182,7 +220,7 @@ def plane():
                 <div class="container">
                     <div class="title">Quantidade de Voos</div>
                     <div class="text">{qtd_registros:,.0f}</div>
-                    <div class="info">Quantidade total de registros</div>
+                    <div class="info col1">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
         
@@ -190,25 +228,25 @@ def plane():
             st.markdown(f'''
                 <div class="container">
                     <div class="title">Voos Brasileiros</div>
-                    <div class="text">{qtd_entrando:,.0f} entradas</div>
-                    <div class="subtext">{qtd_saindo:,.0f} saídas</div>
-                    <div class="info">Voos internacionais que chegam e partem do Brasil</div>
+                    <div class="text">{qtd_entrando:,.0f} +</div>
+                    <div class="text">{qtd_saindo:,.0f} -</div>
+                    <div class="info col2">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
         
         with col3:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Total de combustível</div>
-                    <div class="text">{qtd_combustivel_total:,.0f} L</div>
+                    <div class="title">Total de combustível (L)</div>
+                    <div class="text">{qtd_combustivel_total:,.0f}</div>
                 </div>
             ''', unsafe_allow_html=True)
         
         with col4:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Total de carga</div>
-                    <div class="text">{total_carga_kg:,.0f} Kg</div>
+                    <div class="title">Total de carga (Kg)</div>
+                    <div class="text">{total_carga_kg:,.0f}</div>
                 </div>
             ''', unsafe_allow_html=True)
             
@@ -229,9 +267,9 @@ def plane():
             st.markdown(f'''
                 <div class="container">
                     <div class="title">Voos de {aeroporto_top1_nome}</div>
-                    <div class="text">{len(voos_entrando_gru):,.0f} entradas</div>
-                    <div class="subtext">{len(voos_saindo_gru):,.0f} saídas</div>
-                    <div class="info">Voos chegam e partem de {aeroporto_top1_nome}</div>
+                    <div class="text">{len(voos_entrando_gru):,.0f} +</div>
+                    <div class="text">{len(voos_saindo_gru):,.0f} -</div>
+                    <div class="info col6">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -240,16 +278,16 @@ def plane():
                 <div class="container">
                     <div class="title">Passageiros em {aeroporto_top1_nome}</div>
                     <div class="text">{int(total_passageiros_gru):,.0f}</div>
-                    <div class="info">Total de passageiros transportados</div>
+                    <div class="info col7">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
         
         with col8:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Combustível em {aeroporto_top1_nome}</div>
-                    <div class="text">{int(total_combustivel_gru):,.0f} L</div>
-                    <div class="info">Total de combustível consumido</div>
+                    <div class="title">Combustível em {aeroporto_top1_nome} (L)</div>
+                    <div class="text">{int(total_combustivel_gru):,.0f}</div>
+                    <div class="info col8">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -333,37 +371,37 @@ def plane():
             .reset_index())
 
         # Cards customizados
-        col4, col5, col6, col7 = st.columns(4)
-        with col4:
+        col9, col10, col11, col12 = st.columns(4)
+        with col9:
             st.markdown(f'''
                 <div class="container-m">
                     <div class="title-m">RPK</div>
                     <div class="text-m">{(agg.rpk.iloc[-1] / 1e9):.2f}</div>
-                    <div class="info-m"> Quantidade total de passageiros transportados multiplicada pela distância voada.</div>
+                    <div class="info-m col9">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
-        with col5:
+        with col10:
             st.markdown(f'''
                 <div class="container-m">
                     <div class="title-m">ASK</div>
                     <div class="text-m">{(agg.ask.iloc[-1] / 1e9):.2f}</div>
-                    <div class="info-m">Capacidade total de transporte de passageiros.</div>
+                    <div class="info-m col10">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
-        with col6:
+        with col11:
             st.markdown(f'''
                 <div class="container-m">
                     <div class="title-m">Load Factor (%)</div>
                     <div class="text-m">{(agg.load_factor.iloc[-1]):.2f}</div>
-                    <div class="info-m">Porcentagem de ocupação dos assentos disponíveis.</div>
+                    <div class="info-m col11">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
-        with col7:
+        with col12:
             st.markdown(f'''
                 <div class="container-m">
                     <div class="title-m">Eficiência Carga (%)</div>
                     <div class="text-m">{(agg.eficiencia_carga.iloc[-1]):.2f}</div>
-                    <div class="info-m">Porcentagem da capacidade total de carga utilizada.</div>
+                    <div class="info-m col12">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -517,7 +555,7 @@ def plane():
             colunas_numericas = ['passageiros_pagos', 'passageiros_gratis', 'carga_paga_kg', 'carga_gratis_kg', 'correios_kg', 'ask', 'rpk', 'atk', 'rtk', 'combustivel_litros', 'distancia_voada_km', 'decolagens', 'carga_paga_km', 'carga_gratis_km', 'correio_km', 'assentos', 'payload', 'HORAS_VOADAS', 'bagagem_kg']
 
             st.sidebar.markdown('''
-                <h2 class="emoji-after">Personalize as Métricas!</h2>
+                <h2 class="emoji-after">Personalize as Análises!</h2>
             ''', unsafe_allow_html=True)
             empresas = sorted(df['empresa_sigla'].unique())
             default = sorted(['AZU', 'LAN', 'GLO', 'AAL', 'UAE'])
@@ -584,7 +622,7 @@ def plane():
         st.markdown('''
             <hr>
             
-            <p style="text-align: justify">Esta aplicação foi desenvolvida por <a href="https://www.linkedin.com/in/dev-matheusvn/" target="_blank">Matheus Ventura Nellessen</a>, <a href="" target="_blank">André</a>, <a href="" target="_blank">Heitor</a> e <a href="" target="_blank">Leonardo</a> como projeto final da capacitação em <i>Analytics</i>.</p>
+            <p style="text-align: justify">Esta aplicação foi desenvolvida por <a href="https://www.linkedin.com/in/dev-matheusvn/" target="_blank">Matheus V. Nellessen</a>, <a href="https://www.linkedin.com/in/andr%C3%A9-ciccozzi-71360b1b2/" target="_blank">André Ciccozzi</a>, <a href="" target="_blank">Heitor</a> e <a href="" target="_blank">Leonardo</a> como projeto final da capacitação em <i>Analytics</i>.</p>
                     
-            <p style="text-align: justify">Agradecimentos especiais a instrutora <a href="https://www.linkedin.com/in/daniella-torelli-3464b81a9/" target="_blank">Daniella Torelli</a>, profissional repleta de habilidades para ensinar, responsável pela nossa capacitação técnica nesta nova área.</p>                
+            <p style="text-align: justify">Agradecimentos especiais a instrutora <b>Daniella Torelli</b>, profissional repleta de habilidades para ensinar, responsável pela nossa capacitação técnica nesta nova área.</p>                
         ''', unsafe_allow_html=True)

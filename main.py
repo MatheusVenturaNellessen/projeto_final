@@ -8,7 +8,20 @@ if 'active_tab' not in st.session_state:
     st.session_state.active_tab = 'plane'
 
 with st.sidebar:
-    col1, col2 = st.sidebar.columns([1, 3])
+    st.sidebar.markdown('''
+        <h1>Seja Bem Vindo(a)!</h1>
+        <style>
+            h1 {
+                text-align: center;      
+            }
+                        
+            h1:hover::before {
+                content: "👋";            
+            }
+        </style>
+    ''', unsafe_allow_html=True)
+
+    col1, col2 = st.sidebar.columns([3, 1])
 
     with col1:
         btn_plane = st.button('Plane', key='btn_plane')
