@@ -149,22 +149,103 @@ def plane():
         qtd_entrando = len(voos_entrando)
         qtd_saindo = len(voos_saindo)
 
-        col1, col2, col3 = st.columns(3)
+        df_gru = df[
+            (df["aeroporto_origem_nome"].str.contains("GUARULHOS", case=False, na=False)) |
+            (df["aeroporto_destino_nome"].str.contains("GUARULHOS", case=False, na=False))
+        ]
+
+        voos_entrando_gru = df_gru[df_gru['aeroporto_destino_nome'].str.contains("GUARULHOS", case=False, na=False)]
+        voos_saindo_gru = df_gru[df_gru['aeroporto_origem_nome'].str.contains("GUARULHOS", case=False, na=False)]
+
+        total_passageiros_gru = df_gru['passageiros_pagos'].sum() + df_gru['passageiros_gratis'].sum()
+
+        total_combustivel_gru = df_gru['combustivel_litros'].sum()
+
+
+
+        qtd_registros = df.shape[0]
+
+        qtd_passageiros_total = df['passageiros_pagos'].sum() + df['passageiros_gratis'].sum()
+
+        qtd_combustivel_total = df['combustivel_litros'].sum()
+        total_carga_kg = df['carga_paga_kg'].sum()
+
+        qtd_distancia_voada_total = df['distancia_voada_km'].sum() if 'distancia_voada_km' in df.columns else 0
+
+        col1, col2, col3, col4 = st.columns(4)
         with col1:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Aeroporto mais frequentado</div>
-                    <div class="text">{aeroporto_top1_nome}</div>
-                    <div class="subtext">{aeroporto_top1_qtd} voos</div>
+                    <div class="title">Quantidade de Voos</div>
+                    <div class="text">{qtd_registros:,.0f}</div>
+                    <div class="info">Quantidade total de registros</div>
                 </div>
             ''', unsafe_allow_html=True)
+        
         with col2:
             st.markdown(f'''
                 <div class="container">
                     <div class="title">Voos Internacionais Brasileiros</div>
-                    <div class="text">{qtd_entrando} entradas</div>
-                    <div class="subtext">{qtd_saindo} saídas</div>
+                    <div class="text">{qtd_entrando:,.0f} entradas</div>
+                    <div class="subtext">{qtd_saindo:,.0f} saídas</div>
                     <div class="info">Voos internacionais que chegam e partem do Brasil</div>
+                </div>
+            ''', unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown(f'''
+                <div class="container">
+                    <div class="title">Total de combustível</div>
+                    <div class="text">{qtd_combustivel_total:,.0f} L</div>
+                </div>
+            ''', unsafe_allow_html=True)
+        
+        with col4:
+            st.markdown(f'''
+                <div class="container">
+                    <div class="title">Total de carga</div>
+                    <div class="text">{total_carga_kg:,.0f} Kg</div>
+                </div>
+            ''', unsafe_allow_html=True)
+            
+
+
+        col5, col6, col7, col8 = st.columns(4)
+
+        with col5:
+            st.markdown(f'''
+                <div class="container">
+                    <div class="title">Aeroporto mais frequentado</div>
+                    <div class="text">{aeroporto_top1_nome}</div>
+                    <div class="subtext">{aeroporto_top1_qtd:,.0f} voos</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col6:
+            st.markdown(f'''
+                <div class="container">
+                    <div class="title">Voos de {aeroporto_top1_nome}</div>
+                    <div class="text">{len(voos_entrando_gru):,.0f} entradas</div>
+                    <div class="subtext">{len(voos_saindo_gru):,.0f} saídas</div>
+                    <div class="info">Voos chegam e partem de {aeroporto_top1_nome}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col7:
+            st.markdown(f'''
+                <div class="container">
+                    <div class="title">Passageiros em {aeroporto_top1_nome}</div>
+                    <div class="text">{int(total_passageiros_gru):,.0f}</div>
+                    <div class="info">Total de passageiros transportados</div>
+                </div>
+            ''', unsafe_allow_html=True)
+        
+        with col8:
+            st.markdown(f'''
+                <div class="container">
+                    <div class="title">Combustível em {aeroporto_top1_nome}</div>
+                    <div class="text">{int(total_combustivel_gru):,.0f} L</div>
+                    <div class="info">Total de combustível consumido</div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -409,6 +490,67 @@ def plane():
 
         st.markdown('''<p><b>Análise</b>: Quanto maior o coeficiente, maior a capacidade total utilizada.</p>''', unsafe_allow_html=True)
 
+        # datas_disponiveis = sorted(df['data'].dt.to_period('M').unique().astype(str))
+        # data_selecionada = st.sidebar.selectbox("Selecione o mês:", datas_disponiveis)
+        # df['periodo'] = df['data'].dt.to_period('M').astype(str)
+        # df = df[df['periodo'] == data_selecionada]
+
+        # # Filtro de empresas
+        # empresas_especificas = sorted(['AZU', 'LAN', 'GLO', 'AAL', 'UAE'])
+        # if 'empresas_selecionadas' not in st.session_state:
+        #     st.session_state['empresas_selecionadas'] = empresas_especificas
+
+        # if st.sidebar.button("Resetar Filtro"):
+        #     st.session_state['empresas_selecionadas'] = empresas_especificas
+
+        # empresas_selecionadas = st.sidebar.multiselect(
+        #     "Selecione as empresas (por sigla):",
+        #     options=sorted(df['empresa_sigla'].unique()),
+        #     default=st.session_state['empresas_selecionadas'],
+        #     key='empresas_selecionadas'
+        # )
+
+        # df_filtrado = df[df['empresa_sigla'].isin(empresas_selecionadas)]
+
+        # # Gráfico 1 – Fator de Ocupação (RPK / ASK)
+        # st.markdown("### Fator de Ocupação por Empresa")
+        # dados = df_filtrado.groupby('empresa_sigla')['fator_ocupacao'].mean()
+        # st.bar_chart(dados)
+
+        # # Gráfico 2 – Fator de Carga (RTK / ATK)
+        # st.markdown("### Fator de Carga por Empresa")
+        # dados = df_filtrado.groupby('empresa_sigla')['fator_carga'].mean()
+        # st.area_chart(dados)
+
+        # # Gráfico 3 – Passageiros por Decolagem
+        # st.markdown("### Passageiros por Decolagem")
+        # dados = df_filtrado.groupby('empresa_sigla')['passageiros_por_decolagem'].mean()
+        # st.bar_chart(dados)
+
+        # # Gráfico 4 – Carga por Voo
+        # st.markdown("### Carga Total por Voo (Kg)")
+        # dados = df_filtrado.groupby('empresa_sigla')['carga_por_voo'].mean()
+        # st.bar_chart(dados)
+
+        # # Gráfico 5 – Distância Média por Voo
+        # st.markdown("### Distância Média por Voo (Km)")
+        # dados = df_filtrado.groupby('empresa_sigla')['distancia_por_voo'].mean()
+        # st.area_chart(dados)
+
+        # # Gráfico 6 – Combustível por Passageiro
+        # st.markdown("### Combustível por Passageiro (litros)")
+        # dados = df_filtrado.groupby('empresa_sigla')['combustivel_por_passageiro'].mean()
+        # st.bar_chart(dados)
+
+        # # Gráfico 7 – Assentos por Voo
+        # st.markdown("### Assentos por Voo")
+        # dados = df_filtrado.groupby('empresa_sigla')['assentos_por_voo'].mean()
+        # st.line_chart(dados)
+
+        # # Gráfico 8 – Eficiência da Carga Útil (Payload)
+        # st.markdown("### Eficiência da Carga Útil")
+        # dados = df_filtrado.groupby('empresa_sigla')['payload_efficiency'].mean()
+        # st.bar_chart(dados)
     # ============= INSIGHTS =============
     if page == "Insights":
         st.markdown('''<h3>Olá mundo!</h3>''', unsafe_allow_html=True)
