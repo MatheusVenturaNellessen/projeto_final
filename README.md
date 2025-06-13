@@ -38,22 +38,22 @@
 <pre>
 PROJETO_FINAL_SENAI/
 ├── database/                                
-│   ├── anac/                                   # contém o(s) arquivo(s) CSV origem e destino dos dados de aviação
-│   └── spotify/                                # contém o(s) arquivo(s) CSV origem e destino dos dados de músicas  
+│   ├── anac/                              # contém o(s) arquivo(s) CSV origem e destino dos dados de aviação
+│   └── spotify/                           # contém o(s) arquivo(s) CSV origem e destino dos dados de músicas  
 │
 ├── frontend/                
-│   ├── image/                                  # contém imagens utilizadas na aplicação
-│   ├── esqueleto.py                            # script da seção da análise dos dados de músicas
-│   └── plane.py                                # script da seção da análise dos dados de aviação
+│   ├── image/                             # contém imagens utilizadas na aplicação
+│   ├── esqueleto.py                       # script da seção da análise dos dados de músicas
+│   └── plane.py                           # script da seção da análise dos dados de aviação
 │   
-├── scripts/                                    # contém querys SQL
+├── scripts/                               # contém querys SQL
 │   ├── anac/
 │   │   ├── create_tables.sql
 │   │   └── views.sql
 │   └── spotify/
 │       └── create_tables_spotify.sql
 │
-├── utils/                                      # contém scripts úteis para funcionamnetos dos demais scritps
+├── utils/                                 # contém scripts úteis para funcionamnetos dos demais scritps
 │   ├── anac/
 │   │   ├── analise.py
 │   │   ├── database.py
@@ -63,7 +63,9 @@ PROJETO_FINAL_SENAI/
 │       ├── analise_spotify.py
 │       └── database.py
 │
-└── main.py                                     # script principal da aplicação
+├── dependencias.txt                       # arquivo descritivo sobre as dependências da aplicação   
+│    
+└── main.py                                # script principal da aplicação
 </pre>
 
 
@@ -111,7 +113,7 @@ cd seu/repositorio</code></pre>
   <li>
     <strong>Instale as dependências do projeto</strong><br>
     <pre><code>pip install psycopg2-binary streamlit pandas numpy sqlalchemy matplotlib plotly folium streamlit-folium Pillow streamlit-extras</code></pre>
-    Os detalhes das depedências do projeto estão em <a href="./depedencias.txt">depedencias.txt</a>.
+    (Os detalhes das depedências do projeto estão em <a href="./depedencias.txt">depedencias.txt</a>.)
   </li>
 
   <li>
