@@ -4,6 +4,14 @@ import numpy as np
 import plotly.express as px
 from streamlit_folium import st_folium
 import folium
+from utils.anac.views import (
+    select_view_rpk,
+    select_view_ask,
+    select_view_rtk,
+    select_view_atk,
+    select_view_loadfactor,
+    select_view_eficiencia_carga
+)
 
 # ============== CONFIG E DADOS ==============
 def plane():
@@ -395,35 +403,81 @@ def plane():
                     <div class="info-m col12">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
+            
+    metric_functions = {
+        "rpk": select_view_rpk,
+        "ask": select_view_ask,
+        "rtk": select_view_rtk,
+        "atk": select_view_atk,
+        "load_factor": select_view_loadfactor,
+        "eficiencia_carga": select_view_eficiencia_carga,
+    }
 
-        opcoes = ["rpk", "ask", "load_factor", "rtk", "atk", "eficiencia_carga"]
+    # Lista de opções para o selectbox
+    opcoes = list(metric_functions.keys())
 
-        st.sidebar.markdown('''
-            <h2 class="emoji-after">Personalize as Métricas!</h2>
-        ''', unsafe_allow_html=True)
-        metrica_rank = st.sidebar.selectbox("Escolha a métrica:", options=opcoes, index=0)
+    # Sidebar
+    st.sidebar.markdown('''<h2 class="emoji-after">Personalize as Métricas!</h2>''', unsafe_allow_html=True)
+    metrica_rank = st.sidebar.selectbox("Escolha a métrica:", options=opcoes, index=0)
 
-        ultimo_mes = df["data"].max()
-        base = df[df["data"] == ultimo_mes]
+    # Executa a função correspondente
+    top5 = metric_functions[metrica_rank]()
 
-        if metrica_rank in ["load_factor", "eficiencia_carga"]:
-            tbl = (base.groupby("empresa_sigla")[["rpk", "ask", "rtk", "atk"]].sum())
-            tbl["load_factor"] = 100 * tbl["rpk"] / tbl["ask"].replace(0, np.nan)
-            tbl["eficiencia_carga"] = 100 * tbl["rtk"] / tbl["atk"].replace(0, np.nan)
-            top5 = tbl[metrica_rank].nlargest(5).reset_index()
-        else:
-            top5 = (base.groupby("empresa_sigla")[metrica_rank].sum().nlargest(5).reset_index())
+    # Histograma
+    st.markdown('''<hr>''', unsafe_allow_html=True)
+    st.markdown('''<h2>Histograma: Métricas por Empresa</h2>''', unsafe_allow_html=True)
+    st.bar_chart(top5.set_index("empresa_sigla")[metrica_rank], use_container_width=True, x_label='Top 5 Empresas', y_label='Valor da Métrica')
 
+    # Mostra a query (aparece no terminal pelo print das funções)
+    # Opcional: mostrar no app também
+    # def get_query_text(metric):
+    #     query_map = {
+    #         "rpk": """
+    #             SELECT empresa_sigla, rpk
+    #             FROM vw_metricas_agregadas_ultimo_mes
+    #             ORDER BY rpk DESC
+    #             LIMIT 5;
+    #         """,
+    #         "ask": """
+    #             SELECT empresa_sigla, ask
+    #             FROM vw_metricas_agregadas_ultimo_mes
+    #             ORDER BY ask DESC
+    #             LIMIT 5;
+    #         """,
+    #         "rtk": """
+    #             SELECT empresa_sigla, rtk
+    #             FROM vw_metricas_agregadas_ultimo_mes
+    #             ORDER BY rtk DESC
+    #             LIMIT 5;
+    #         """,
+    #         "atk": """
+    #             SELECT empresa_sigla, atk
+    #             FROM vw_metricas_agregadas_ultimo_mes
+    #             ORDER BY atk DESC
+    #             LIMIT 5;
+    #         """,
+    #         "load_factor": """
+    #             SELECT empresa_sigla, load_factor
+    #             FROM vw_metricas_agregadas_ultimo_mes
+    #             ORDER BY load_factor DESC
+    #             LIMIT 5;
+    #         """,
+    #         "eficiencia_carga": """
+    #             SELECT empresa_sigla, eficiencia_carga
+    #             FROM vw_metricas_agregadas_ultimo_mes
+    #             ORDER BY eficiencia_carga DESC
+    #             LIMIT 5;
+    #         """
+    #     }
+    #     return query_map.get(metric, "-- SQL não encontrada --").strip()
 
-        st.markdown('''<hr>''', unsafe_allow_html=True)
-        st.markdown('''<h2>Histograma: Métricas por Empresa</h2>''', unsafe_allow_html=True)
-        st.bar_chart(top5.set_index("empresa_sigla")[metrica_rank], use_container_width=True, x_label='Top 5 Empresas', y_label='Valor da Métrica')
+    # SQL View
+    st.markdown('''<hr>''', unsafe_allow_html=True)
+    st.markdown('''<h2>SQL View: Métricas por Empresa</h2>''', unsafe_allow_html=True)
+    # st.code(get_query_text(metrica_rank), language="sql")
+    st.dataframe(top5, use_container_width=True)
 
-        st.markdown('''<hr>''', unsafe_allow_html=True)
-        st.markdown('''<h2>SQL View: Métricas por Empresa</h2>''', unsafe_allow_html=True)
-        st.dataframe(top5, use_container_width=True)
-
-
+#----------------------------------------------------------------------------------------------------------
     # ============= ANÁLISES GRÁFICAS =============
     if page == "Análises Gráficas":
         # Adiciona empresas únicas
