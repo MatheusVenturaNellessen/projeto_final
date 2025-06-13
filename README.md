@@ -111,6 +111,7 @@ cd seu/repositorio</code></pre>
   <li>
     <strong>Instale as dependências do projeto</strong><br>
     <pre><code>pip install psycopg2-binary streamlit pandas numpy sqlalchemy matplotlib plotly folium streamlit-folium Pillow streamlit-extras</code></pre>
+    Os detalhes das depedências do projeto estão em <a href="./depedencias.txt">depedencias.txt</a>.
   </li>
 
   <li>
