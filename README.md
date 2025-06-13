@@ -1,32 +1,60 @@
-<h1>[título do projeto]</h1>
+<h1>Projeto Final do Senai</h1>
 
-<p align="justify">[descrição do(s) objetivo(s)/proposta(s) do projeto]</p>
+<p align="center">O objetivo deste projeto é aplicar, na prática, todas as etapas do processo de análise de dados, desde a compreensão dos dados brutos até a criação de visualizações interativas por meio do <code>Streamlit</code>.Este projeto representa a consolidação prática dos conhecimentos adquiridos durante a capacitação, integrando conceitos de <strong>data cleaning</strong>, <strong>bancos de dados relacionais</strong> e <strong>data visualization</strong>.</p>
 
 <hr>
 
 <h2>Tecnologias utilizadas</h2>
 <ul>
-    <li><strong>[tecnologia] v[versão utilizado no desenvolvimento do projeto]</strong>: [breve descrição do que a tecnologia faz/fez]</li>
+    <li><strong>Pytohn v3.13.3</strong>: [breve descrição do que a tecnologia faz/fez]</li>
+    <li><strong>Pandas v2.2.3</strong>: Utilizado para manipulação e análise de dados tabulares (DataFrames, leitura de CSV, filtros, agrupamentos, etc.).</li>
+    <li><strong>Streamlit v1.45.1</strong>: Utilizado para manipulação e análise de dados tabulares (DataFrames, leitura de CSV, filtros, agrupamentos, etc.).</li>
+    <li><strong>Numpy v2.2.6</strong>: Suporte a operações matemáticas e vetoriais, base para manipulação de arrays numéricos.</li>
+    <li><strong>Plotly.express v6.1.2</strong>: Gera gráficos interativos com visual moderno e dinâmico.</li>
+    <li><strong>Folium v0.19.7</strong>: Cria mapas interativos geográficos, geralmente integrando dados com localização (latitude/longitude).</li>
+    <li><strong>Streamlit_folium v0.25.0</strong>: Faz a integração entre mapas Folium e a interface do Streamlit, permitindo visualização direta na aplicação.</li>
+    <li><strong>Pillow (PIL) v11.2.1</strong>: Permite abrir, editar e exibir imagens (como JPG, PNG) dentro do projeto.</li>
+    <li><strong>Streamlit_extras.metric_cards v0.6.0</strong>: Adiciona cartões de métricas customizadas ao Streamlit, melhorando a apresentação dos dados.</li>
 </ul>
 
 <hr>
 
-<h2>Estrutura das pastas</h2>
+<h2>Estrutura do projeto</h2>
 
 <pre>
-EXEMPLO:
-[NOME DO REPOSITÓRIO]/
-├── csv/                        # comentário explicativo
-│   └── arquivo.csv
+PROJETO_FINAL/
 ├── database/
-│   └── banco.db
-├── modules/
-│   ├── __pycache__/
-│   └── mod1.py
-└── main_app.py
+│   ├── anac/
+│   ├── spotify/
+│   └── app.py
+│
+├── frontend/
+│   ├── image/
+│   ├── esqueleto.py
+│   └── plane.py
+│
+├── scripts/
+│   ├── anac/
+│   │   ├── create_tables.sql
+│   │   └── views.sql
+│   └── spotify/
+│       └── create_tables_spotify.sql
+│
+├── utils/
+│   ├── anac/
+│   │   ├── analise.py
+│   │   ├── database.py
+│   │   ├── metricas.py
+│   │   └── views.py
+│   └── spotify/
+│       ├── analise_spotify.py
+│       └── database.py
+│
+└── main.py
 </pre>
 
-<p align="justify">[se omitir algum arquivo e/ou pasta, justificar aqui]</p>
+
+<p align="justify">Alguns arquivos e diretórios foram omitidos por não serem essenciais para entendimento da estrutura do projeto.</p>
 
 <hr>
 
@@ -89,7 +117,7 @@ cd seu/repositorio</code></pre>
 
 <h2>⚠️ Importante</h2>
 
-<p align="justify">Os dados utilizados neste projeto são de acesso público, obtidos exclusivamente a partir de fontes abertas como o Kaggle e o portal da Agência Nacional de Aviação Civil (ANAC). Nenhuma informação sigilosa, proprietária ou sensível foi empregada.</p>
+<p align="justify">Os dados utilizados neste projeto são de acesso público, obtidos exclusivamente a partir de fontes abertas como o <a href="https://www.kaggle.com/datasets/nelgiriyewithana/top-spotify-songs-2023/data">Kaggle</a> e o portal da <a href="https://www.gov.br/anac/pt-br/assuntos/dados-e-estatisticas/dados-estatisticos/dados-estatisticos">Agência Nacional de Aviação Civil (ANAC)</a>. Nenhuma informação sigilosa, proprietária ou sensível foi empregada.</p>
 
 <p align="justify">Este projeto tem caráter estritamente educacional, sendo desenvolvido com o objetivo de aprendizado e capacitação técnica na área de análise de dados. Não possui fins comerciais, tampouco representa qualquer tipo de vínculo, parecer oficial ou risco a organizações, empresas ou órgãos públicos mencionados direta ou indiretamente.</p>
 
