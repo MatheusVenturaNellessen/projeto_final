@@ -1,6 +1,6 @@
 <h1>Projeto Final do Senai</h1>
 
-<p align="center">O objetivo deste projeto é aplicar, na prática, todas as etapas do processo de análise de dados, desde a compreensão dos dados brutos até a criação de visualizações interativas por meio do <code>Streamlit</code>.Este projeto representa a consolidação prática dos conhecimentos adquiridos durante a capacitação, integrando conceitos de <strong>data cleaning</strong>, <strong>bancos de dados relacionais</strong> e <strong>data visualization</strong>.</p>
+<p align="justify">O objetivo deste projeto é aplicar, na prática, todas as etapas do processo de análise de dados, desde a compreensão dos dados brutos até a criação de visualizações interativas por meio do <code>Streamlit</code>.Este projeto representa a consolidação prática dos conhecimentos adquiridos durante a capacitação, integrando conceitos de <strong>data cleaning</strong>, <strong>bancos de dados relacionais</strong> e <strong>data visualization</strong>.</p>
 
 <hr>
 
@@ -22,25 +22,25 @@
 <h2>Estrutura do projeto</h2>
 
 <pre>
-PROJETO_FINAL/
-├── database/
-│   ├── anac/
-│   ├── spotify/
+PROJETO_FINAL_SENAI/
+├── database/                                
+│   ├── anac/                                   # contém o(s) arquivo(s) CSV origem e destino dos dados de aviação
+│   ├── spotify/                                # contém o(s) arquivo(s) CSV origem e destino dos dados de músicas  
 │   └── app.py
 │
-├── frontend/
-│   ├── image/
-│   ├── esqueleto.py
-│   └── plane.py
-│
-├── scripts/
+├── frontend/                
+│   ├── image/                                  # contém as imagens utilizadas na aplicação
+│   ├── esqueleto.py                            # script da seção da análise dos dados de músicas
+│   └── plane.py                                # script da seção da análise dos dados de aviação
+│   
+├── scripts/                                    # contém as querys SQL
 │   ├── anac/
 │   │   ├── create_tables.sql
 │   │   └── views.sql
 │   └── spotify/
 │       └── create_tables_spotify.sql
 │
-├── utils/
+├── utils/                                      # contém scripts úteis para funcionamnetos dos demais scritps
 │   ├── anac/
 │   │   ├── analise.py
 │   │   ├── database.py
@@ -50,7 +50,7 @@ PROJETO_FINAL/
 │       ├── analise_spotify.py
 │       └── database.py
 │
-└── main.py
+└── main.py                                     # script principal da aplicação
 </pre>
 
 
