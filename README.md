@@ -1,20 +1,30 @@
-<h1>Projeto Final do Senai</h1>
+<h1>Projeto Final - Senai</h1>
 
-<p align="justify">O objetivo deste projeto é aplicar, na prática, todas as etapas do processo de análise de dados, desde a compreensão dos dados brutos até a criação de visualizações interativas por meio do <code>Streamlit</code>.Este projeto representa a consolidação prática dos conhecimentos adquiridos durante a capacitação, integrando conceitos de <strong>data cleaning</strong>, <strong>bancos de dados relacionais</strong> e <strong>data visualization</strong>.</p>
+<p align="justify">O objetivo deste projeto é aplicar, na prática, todas as etapas do processo de análise de dados, desde a compreensão dos dados brutos até a criação de visualizações interativas por meio do <strong>Streamlit</strong>. Este projeto representa a consolidação prática dos conhecimentos adquiridos durante a capacitação, integrando conceitos de <strong>data cleaning</strong>, <strong>bancos de dados relacionais</strong> e <strong>data visualization</strong>.</p>
 
 <hr>
 
 <h2>Tecnologias utilizadas</h2>
 <ul>
-    <li><strong>Pytohn v3.13.3</strong>: [breve descrição do que a tecnologia faz/fez]</li>
-    <li><strong>Pandas v2.2.3</strong>: Utilizado para manipulação e análise de dados tabulares (DataFrames, leitura de CSV, filtros, agrupamentos, etc.).</li>
-    <li><strong>Streamlit v1.45.1</strong>: Utilizado para manipulação e análise de dados tabulares (DataFrames, leitura de CSV, filtros, agrupamentos, etc.).</li>
-    <li><strong>Numpy v2.2.6</strong>: Suporte a operações matemáticas e vetoriais, base para manipulação de arrays numéricos.</li>
-    <li><strong>Plotly.express v6.1.2</strong>: Gera gráficos interativos com visual moderno e dinâmico.</li>
-    <li><strong>Folium v0.19.7</strong>: Cria mapas interativos geográficos, geralmente integrando dados com localização (latitude/longitude).</li>
-    <li><strong>Streamlit_folium v0.25.0</strong>: Faz a integração entre mapas Folium e a interface do Streamlit, permitindo visualização direta na aplicação.</li>
-    <li><strong>Pillow (PIL) v11.2.1</strong>: Permite abrir, editar e exibir imagens (como JPG, PNG) dentro do projeto.</li>
-    <li><strong>Streamlit_extras.metric_cards v0.6.0</strong>: Adiciona cartões de métricas customizadas ao Streamlit, melhorando a apresentação dos dados.</li>
+    <li><strong>Pytohn v3.13.3</strong>: Compatível para analisar, processar, visualizar e interpretar dados com as blibiotecas/<i>frameworks</i> corretos;</li>
+    <br>
+    <li><strong>Pandas v2.2.3</strong>: Utilizado para manipulação e análise de dados tabulares;</li>
+    <br>
+    <li><strong>PostegreSQL v17.5</strong>: Banco de dados relacional usado para armazenar, consultar e gerenciar grandes volumes de dados com segurança e robustez;</li>
+    <br>
+    <li><strong>Streamlit v1.45.1</strong>: Permite criar aplicações web interativas para visualização de dados de forma rápida e simples;</li>
+    <br>
+    <li><strong>Numpy v2.2.6</strong>: Suporte a operações matemáticas e vetoriais, base para manipulação de arrays numéricos;</li>
+    <br>
+    <li><strong>Plotly v6.1.2</strong>: Gera gráficos interativos com visual moderno e dinâmico;</li>
+    <br>
+    <li><strong>Folium v0.19.7</strong>: Cria mapas interativos geográficos, geralmente integrando dados com localização;</li>
+    <br>
+    <li><strong>Streamlit_folium v0.25.0</strong>: Faz a integração entre mapas Folium e a interface do Streamlit;</li>
+    <br>
+    <li><strong>Pillow v11.2.1</strong>: Permite abrir, editar e exibir imagens dentro da aplicação;</li>
+    <br>
+    <li><strong>Streamlit_extras v0.6.0</strong>: Adiciona cartões de métricas customizadas ao Streamlit, melhorando a apresentação dos dados.</li>
 </ul>
 
 <hr>
@@ -25,15 +35,14 @@
 PROJETO_FINAL_SENAI/
 ├── database/                                
 │   ├── anac/                                   # contém o(s) arquivo(s) CSV origem e destino dos dados de aviação
-│   ├── spotify/                                # contém o(s) arquivo(s) CSV origem e destino dos dados de músicas  
-│   └── app.py
+│   └── spotify/                                # contém o(s) arquivo(s) CSV origem e destino dos dados de músicas  
 │
 ├── frontend/                
-│   ├── image/                                  # contém as imagens utilizadas na aplicação
+│   ├── image/                                  # contém imagens utilizadas na aplicação
 │   ├── esqueleto.py                            # script da seção da análise dos dados de músicas
 │   └── plane.py                                # script da seção da análise dos dados de aviação
 │   
-├── scripts/                                    # contém as querys SQL
+├── scripts/                                    # contém querys SQL
 │   ├── anac/
 │   │   ├── create_tables.sql
 │   │   └── views.sql
@@ -60,8 +69,8 @@ PROJETO_FINAL_SENAI/
 
 <h2>Funcionalidades</h2>
 
-<h3 id="login-logout">[título da funcionalidade]</h3>
-<img src="caminho/relativo/do/arquivo.gif" alt="texto alternativo" />
+<h3>[título da funcionalidade]</h3>
+<img src="caminho/relativo/do/arquivo.gif" alt="texto alternativo"/>
 <ul>
   <li>[descrição da(s) funcionalidade(s)]</li>
 </ul>
@@ -74,6 +83,7 @@ PROJETO_FINAL_SENAI/
 <ul>
   <li>Python v3.13.3 ou superior</li>
   <li>Git instalado</li>
+  <li>PostegreSQL instalado</li>
   <li>Navegador moderno (Chrome, Firefox, etc.)</li>
 </ul>
 
@@ -99,6 +109,10 @@ cd seu/repositorio</code></pre>
     <pre><code>pip install streamlit pandas numpy plotly folium streamlit-folium pillow streamlit-extras</code></pre>
   </li>
 
+  <li>
+      [falar sobre o PostegreSQL aqui]
+  </li>
+  
   <li>
     <strong>Execute a aplicação com Streamlit</strong>
     <pre><code>streamlit run main.py</code></pre>
@@ -126,7 +140,7 @@ cd seu/repositorio</code></pre>
 <hr>
 
 <h2>Contribuições</h2>
-<p align="justify">Este projeto está aberto para contribuições via <i>>issues</i>. Se você encontrou um <i>bug</i>, deseja sugerir uma melhoria ou tem dúvidas sobre o funcionamento, siga as instruções abaixo:</p>
+<p align="justify">Este projeto está aberto para contribuições via <i>issues</i>. Se você encontrou um <i>bug</i>, deseja sugerir uma melhoria ou tem dúvidas sobre o funcionamento, siga as instruções abaixo:</p>
 <ol>
     <li>Verifique se já existe uma <i>issue</i> sobre o assunto. Caso sim, adicione um comentário nela.</li>
     <li>Se não houver, abra uma nova <i>issue</i> com uma descrição clara e objetiva.</li>
@@ -135,4 +149,4 @@ cd seu/repositorio</code></pre>
 <hr>
 
 <h2>Licença e Autor</h2>
-<p align="justify">Este projeto foi desenvolvido por <a href="https://github.com/MatheusVenturaNellessen">Matheus V. Nellessen</a>, <a href="https://github.com/andre-ciccozzi">André Cicozzi</a>, <a href="https://github.com/heitorkino">Heitor Aguiar</a>, <a href="https://github.com/LeoXP890">Leonardo Novi</a>, e está licenciado sob a licença [acho bom licenciar o projeto sob alguma licença, existem várias]. Veja o <a href="./LICENSE">documento</a> para mais detalhes.</p>
+<p align="justify">Este projeto foi desenvolvido por <a href="https://github.com/MatheusVenturaNellessen">Matheus V. Nellessen</a>, <a href="https://github.com/andre-ciccozzi">André Cicozzi</a>, <a href="https://github.com/heitorkino">Heitor Aguiar</a>, <a href="https://github.com/LeoXP890">Leonardo Novi</a>, e está licenciado sob a licença MIT. Veja o <a href="./LICENSE">documento</a> para mais detalhes.</p>
