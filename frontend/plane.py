@@ -4,6 +4,14 @@ import numpy as np
 import plotly.express as px
 from streamlit_folium import st_folium
 import folium
+from utils.anac.views import (
+    select_view_rpk,
+    select_view_ask,
+    select_view_rtk,
+    select_view_atk,
+    select_view_loadfactor,
+    select_view_eficiencia_carga
+)
 
 # ============== CONFIG E DADOS ==============
 def plane():
@@ -395,35 +403,81 @@ def plane():
                     <div class="info-m col12">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
+            
+    metric_functions = {
+        "rpk": select_view_rpk,
+        "ask": select_view_ask,
+        "rtk": select_view_rtk,
+        "atk": select_view_atk,
+        "load_factor": select_view_loadfactor,
+        "eficiencia_carga": select_view_eficiencia_carga,
+    }
 
-        opcoes = ["rpk", "ask", "load_factor", "rtk", "atk", "eficiencia_carga"]
+    # Lista de opções para o selectbox
+    opcoes = list(metric_functions.keys())
 
-        st.sidebar.markdown('''
-            <h2 class="emoji-after">Personalize as Métricas!</h2>
-        ''', unsafe_allow_html=True)
-        metrica_rank = st.sidebar.selectbox("Escolha a métrica:", options=opcoes, index=0)
+    # Sidebar
+    st.sidebar.markdown('''<h2 class="emoji-after">Personalize as Métricas!</h2>''', unsafe_allow_html=True)
+    metrica_rank = st.sidebar.selectbox("Escolha a métrica:", options=opcoes, index=0)
 
-        ultimo_mes = df["data"].max()
-        base = df[df["data"] == ultimo_mes]
+    # Executa a função correspondente
+    top5 = metric_functions[metrica_rank]()
 
-        if metrica_rank in ["load_factor", "eficiencia_carga"]:
-            tbl = (base.groupby("empresa_sigla")[["rpk", "ask", "rtk", "atk"]].sum())
-            tbl["load_factor"] = 100 * tbl["rpk"] / tbl["ask"].replace(0, np.nan)
-            tbl["eficiencia_carga"] = 100 * tbl["rtk"] / tbl["atk"].replace(0, np.nan)
-            top5 = tbl[metrica_rank].nlargest(5).reset_index()
-        else:
-            top5 = (base.groupby("empresa_sigla")[metrica_rank].sum().nlargest(5).reset_index())
+    # Histograma
+    st.markdown('''<hr>''', unsafe_allow_html=True)
+    st.markdown('''<h2>Histograma: Métricas por Empresa</h2>''', unsafe_allow_html=True)
+    st.bar_chart(top5.set_index("empresa_sigla")[metrica_rank], use_container_width=True, x_label='Top 5 Empresas', y_label='Valor da Métrica')
 
+    # Mostra a query (aparece no terminal pelo print das funções)
+    # Opcional: mostrar no app também
+    def get_query_text(metric):
+        query_map = {
+            "rpk": """
+                SELECT empresa_sigla, rpk
+                FROM vw_metricas_agregadas_ultimo_mes
+                ORDER BY rpk DESC
+                LIMIT 5;
+            """,
+            "ask": """
+                SELECT empresa_sigla, ask
+                FROM vw_metricas_agregadas_ultimo_mes
+                ORDER BY ask DESC
+                LIMIT 5;
+            """,
+            "rtk": """
+                SELECT empresa_sigla, rtk
+                FROM vw_metricas_agregadas_ultimo_mes
+                ORDER BY rtk DESC
+                LIMIT 5;
+            """,
+            "atk": """
+                SELECT empresa_sigla, atk
+                FROM vw_metricas_agregadas_ultimo_mes
+                ORDER BY atk DESC
+                LIMIT 5;
+            """,
+            "load_factor": """
+                SELECT empresa_sigla, load_factor
+                FROM vw_metricas_agregadas_ultimo_mes
+                ORDER BY load_factor DESC
+                LIMIT 5;
+            """,
+            "eficiencia_carga": """
+                SELECT empresa_sigla, eficiencia_carga
+                FROM vw_metricas_agregadas_ultimo_mes
+                ORDER BY eficiencia_carga DESC
+                LIMIT 5;
+            """
+        }
+        return query_map.get(metric, "-- SQL não encontrada --").strip()
 
-        st.markdown('''<hr>''', unsafe_allow_html=True)
-        st.markdown('''<h2>Histograma: Métricas por Empresa</h2>''', unsafe_allow_html=True)
-        st.bar_chart(top5.set_index("empresa_sigla")[metrica_rank], use_container_width=True, x_label='Top 5 Empresas', y_label='Valor da Métrica')
+    # SQL View
+    st.markdown('''<hr>''', unsafe_allow_html=True)
+    st.markdown('''<h2>SQL View: Métricas por Empresa</h2>''', unsafe_allow_html=True)
+    st.code(get_query_text(metrica_rank), language="sql")
+    st.dataframe(top5, use_container_width=True)
 
-        st.markdown('''<hr>''', unsafe_allow_html=True)
-        st.markdown('''<h2>SQL View: Métricas por Empresa</h2>''', unsafe_allow_html=True)
-        st.dataframe(top5, use_container_width=True)
-
-
+#----------------------------------------------------------------------------------------------------------
     # ============= ANÁLISES GRÁFICAS =============
     if page == "Análises Gráficas":
         # Adiciona empresas únicas
@@ -525,7 +579,83 @@ def plane():
 
     # ============= INSIGHTS =============
     if page == "Insights":
-        st.markdown('''<h3>Olá mundo!</h3>''', unsafe_allow_html=True)
+        st.markdown('''
+
+        <h1>🔍 Análise Estratégica das Operações Aéreas no Brasil</h1>
+        <p align="center"><strong>(Foco no Aeroporto de Guarulhos)</strong></p>
+
+        <h2>Visão Geral das Operações</h2>
+        <ul>
+            <li>Voos totais registrados: <strong>13.329</strong></li>
+            <li>Aeroporto com maior movimentação: <strong>Guarulhos (2.678 voos)</strong></li>
+        </ul>
+
+        <h3> Distribuição Nacional:</h3>
+        <ul>
+            <li>Voos com origem no Brasil: <strong>1.884</strong></li>
+            <li>Voos com destino ao Brasil: <strong>1.887</strong></li>
+        </ul>
+        <p align="center"><em>Indicador de equilíbrio na conectividade internacional e doméstica.</em></p>
+
+        <h2>Carga & Combustível</h2>
+        <h3>Dados gerais:</h3>
+        <ul>
+            <li>Combustível total consumido: <strong>1,71 bilhões de litros</strong></li>
+            <li>Carga total transportada: <strong>458,8 milhões de Kg</strong></li>
+        </ul>
+
+        <h4>Dados de Guarulhos:</h4>
+        <ul>
+            <li>Combustível total consumido: <strong>730,6 milhões de litros (42,6% do total nacional)</strong></li>
+            <li>Movimentação total de passageiros: <strong>14,6 milhões</strong></li>
+        </ul>
+        <p align="center">Guarulhos concentra uma parte significativa dos recursos logísticos e operacionais, sendo um ponto de atenção para políticas de eficiência e sustentabilidade.</p>
+
+        <h2>Análise de Mercado – Potencial Estratégico de Guarulhos</h2>
+        <p align="center">Com quase 43% de todo o combustível consumido no setor aéreo nacional, o aeroporto de Guarulhos assume o papel de ponto central da aviação brasileira, tanto em mobilidade de passageiros quanto em transporte de cargas. Este volume expressivo de movimentação não apenas posiciona Guarulhos como hub logístico dominante, mas também o torna altamente sensível a oscilações nos custos de combustível e políticas regulatórias.</p>
+
+        <h3>Demanda Concentrada</h3>
+        <p align="center">A movimentação de 14,6 milhões de passageiros revela a importância de Guarulhos como porta de entrada e saída do país, com impacto direto na receita das companhias aéreas, no turismo, no comércio internacional e no fluxo corporativo. Com a crescente urbanização e centralização econômica na região Sudeste, espera-se que essa demanda continue elevada nos próximos anos, exigindo respostas estruturais do setor.</p>
+
+        <h3>Carga como Oportunidade de Expansão</h3>
+        <p align="center">Embora o relatório não detalhe a fatia de carga operada especificamente por Guarulhos, a infraestrutura e localização do aeroporto o tornam altamente competitivo no mercado de frete aéreo. Isso representa uma oportunidade clara de:</p>
+        <ul>
+            <li>Expandir terminais de carga com tecnologia de automação;</li>
+            <li>Atrair operadores logísticos globais;</li>
+            <li>Promover rotas exclusivas de carga (<i>freighters</i>) com maior valor agregado.</li>
+        </ul>
+
+        <h3>⚠️ Pressões e Riscos de Mercado:</h3>
+        <ul>
+            <li><strong>Custo do combustível:</strong> O querosene de aviação representa o principal custo variável do setor. Com alta concentração de consumo em Guarulhos, oscilações no preço internacional do petróleo afetam diretamente a lucratividade das operações que passam pelo aeroporto.</li>
+            <li><strong>Conflitos geopolíticos e mudanças climáticas</strong> podem comprometer a regularidade do abastecimento e aumentar o custo de operação.</li>
+            <li><strong>Regulações ambientais futuras</strong> (ex: taxas de carbono, metas de descarbonização) terão impacto direto sobre aeroportos com maior pegada de carbono — caso de Guarulhos.</li>
+        </ul>
+
+        <h3>Perspectivas e Recomendação de Mercado</h3>
+        <p>Guarulhos já opera como hub dominante, mas sua posição também representa uma exposição crítica a riscos operacionais e ambientais. Para manter competitividade e atender às exigências futuras do mercado, é essencial que os players do setor (companhias aéreas, operadoras logísticas e governo) adotem estratégias como:</p>
+        <ul>
+            <li>Investimentos em eficiência energética e SAF (combustível sustentável de aviação) para reduzir a dependência do querosene fóssil.</li>
+            <li>Ampliação da capacidade de carga aérea, com foco em e-commerce internacional, produtos farmacêuticos e eletrônicos — segmentos de alta rentabilidade.</li>
+            <li>Parcerias estratégicas com plataformas de logística digital para otimização do uso do porão das aeronaves.</li>
+            <li>Política de incentivos fiscais e tarifários para operações sustentáveis que utilizem Guarulhos como base.</li>
+        </ul>
+
+        <h2>Desempenho das Empresas Aéreas</h2>
+        <ul>
+            <li><strong>RPK</strong> (Receita por Passageiro-Km): 20,98</li>
+            <li><strong>ASK</strong> (Assentos disponíveis-Km): 25,06</li>
+            <li><strong>Fator de Ocupação (Load Factor):</strong> 83,74%</li>
+            <li><strong>Eficiência de Carga:</strong> 63,88%</li>
+        </ul>
+
+        <h3>Interpretação</h4>
+        <ul>
+            <li>Alta ocupação média dos voos (83,74%) indica bom aproveitamento comercial.</li>
+            <li>Eficiência de carga (63,88%) revela oportunidades de otimização logística.</li>
+            <li>RPK vs. ASK aponta uso eficaz da capacidade disponível.</li>
+        </ul>
+        ''', unsafe_allow_html=True)
 
     # ============= INFO =============
     if page == "Informações":
