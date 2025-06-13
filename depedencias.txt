@@ -1,0 +1,16 @@
+pip install psycopg2-binary streamlit pandas numpy sqlalchemy matplotlib plotly folium streamlit-folium Pillow streamlit-extras
+
+os
+psycopg2_binary
+streamlit
+pandas
+numpy
+sqlalchemy
+matplotlib
+plotly
+folium
+streamlit_folium
+PIL
+streamlit_extras
+
+sqlalchemy
