@@ -4,6 +4,7 @@ import numpy as np
 import plotly.express as px
 from streamlit_folium import st_folium
 import folium
+from PIL import Image
 from utils.anac.views import (
     select_view_rpk,
     select_view_ask,
@@ -169,7 +170,13 @@ def plane():
     df['payload_efficiency'] = (df['payload'] / (df['ask'] + df['atk'])).where((df['ask'] + df['atk']) != 0)
 
     # ============= SIDEBAR INICIAL =============
-    st.sidebar.image("frontend\\image\\plane.png", width=150)
+    
+    img = Image.open("frontend\\image\\plane.png",)
+    
+    colum1, colum2, colum3 = st.sidebar.columns([1, 2, 1])
+    with colum2:
+        st.image(img, width=150)
+
 
     st.sidebar.markdown('''<h1 class="emoji-after">Navegue por aqui!</h1>''', unsafe_allow_html=True)
     page = st.sidebar.radio("Ir para:", ["Visão Geral", "Métricas", "Análises Gráficas", "Insights", "Informações"])
@@ -743,7 +750,7 @@ def plane():
         st.markdown('''
             <hr>
             
-            <p style="text-align: justify">Esta aplicação foi desenvolvida por <a href="https://www.linkedin.com/in/dev-matheusvn/" target="_blank">Matheus V. Nellessen</a>, <a href="https://www.linkedin.com/in/andr%C3%A9-ciccozzi-71360b1b2/" target="_blank">André Ciccozzi</a>, <a href="" target="_blank">Heitor</a> e <a href="" target="_blank">Leonardo</a> como projeto final da capacitação em <i>Analytics</i>.</p>
+            <p style="text-align: justify">Esta aplicação foi desenvolvida por <a href="https://www.linkedin.com/in/dev-matheusvn/" target="_blank">Matheus V. Nellessen</a>, <a href="https://www.linkedin.com/in/andr%C3%A9-ciccozzi-71360b1b2/" target="_blank">André Ciccozzi</a>, <a href="https://github.com/heitorkino" target="_blank">Heitor Aguiar</a> e <a href="https://www.linkedin.com/in/leonardo-novi-990a4a237/" target="_blank">Leonardo Novi</a> como projeto final da capacitação em <i>Analytics</i>.</p>
                     
             <p style="text-align: justify">Agradecimentos especiais a instrutora <b>Daniella Torelli</b>, profissional repleta de habilidades para ensinar, responsável pela nossa capacitação técnica nesta nova área.</p>                
         ''', unsafe_allow_html=True)

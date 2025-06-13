@@ -22,7 +22,7 @@ def esqueleto():
 
     /* Navbar / barra lateral */
     [data-testid="stSidebar"] {
-        background-color: #A64962;
+        background-color: #E9D8DB;
     }
 
     /* Títulos principais */
