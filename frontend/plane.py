@@ -5,18 +5,12 @@ import plotly.express as px
 from streamlit_folium import st_folium
 import folium
 
-# display: flex;
-#                 flex-direction: column;
-#                 justify-content: center; 
-#                 align-items: center;
-
 # ============== CONFIG E DADOS ==============
 def plane():
     st.markdown("""
         <style>
             .container {
                 background-color: white;
-                filter: opacity(0.9);
                 border-radius: 15px;
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
                 margin: 10px; padding: 20px;
@@ -24,9 +18,9 @@ def plane():
             }
             
             .container:hover {
-                filter: opacity(1);
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
                 border-left: 5px solid #302681;
+                cursor: pointer;
                 transition: filter box-shadow 0.5s ease; 
             }
 
@@ -57,7 +51,6 @@ def plane():
                 
             .container-m {
                 background-color: white;
-                filter: opacity(0.9);
                 border-radius: 15px;
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
                 margin: 5px; padding: 10px;
@@ -65,9 +58,9 @@ def plane():
             }
             
             .container-m:hover {
-                filter: opacity(1);
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
                 border-left: 5px solid #302681;
+                cursor: pointer;
                 transition: filter box-shadow 0.5s ease;  
             }
 
@@ -143,7 +136,10 @@ def plane():
             .col12:hover::after {
                 content: "Porcentagem da capacidade total de carga utilizada.";    
             }
-                
+            
+            .info-page {
+                text-align: justify;   
+            }
         </style>
     """, unsafe_allow_html=True)
 
@@ -218,7 +214,7 @@ def plane():
         with col1:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Quantidade de Voos</div>
+                    <div class="title">Quantidade total de voos</div>
                     <div class="text">{qtd_registros:,.0f}</div>
                     <div class="info col1">ⓘ </div>
                 </div>
@@ -227,9 +223,8 @@ def plane():
         with col2:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Voos Brasileiros</div>
-                    <div class="text">{qtd_entrando:,.0f} +</div>
-                    <div class="text">{qtd_saindo:,.0f} -</div>
+                    <div class="title">Voos brasileiros</div>
+                    <div class="text">{qtd_entrando:,.0f} + | {qtd_saindo:,.0f} -</div>
                     <div class="info col2">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
@@ -250,8 +245,6 @@ def plane():
                 </div>
             ''', unsafe_allow_html=True)
             
-
-
         col5, col6, col7, col8 = st.columns(4)
 
         with col5:
@@ -259,7 +252,6 @@ def plane():
                 <div class="container">
                     <div class="title">Aeroporto mais frequentado</div>
                     <div class="text">{aeroporto_top1_nome}</div>
-                    <div class="subtext">{aeroporto_top1_qtd:,.0f} voos</div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -267,8 +259,7 @@ def plane():
             st.markdown(f'''
                 <div class="container">
                     <div class="title">Voos de {aeroporto_top1_nome}</div>
-                    <div class="text">{len(voos_entrando_gru):,.0f} +</div>
-                    <div class="text">{len(voos_saindo_gru):,.0f} -</div>
+                    <div class="text">{len(voos_entrando_gru):,.0f} + | {len(voos_saindo_gru):,.0f} -</div>
                     <div class="info col6">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
@@ -599,7 +590,7 @@ def plane():
             st.dataframe(pd.DataFrame({f"C.V. ({x_col})": cv_x.round(3), f"C.V. ({y_col})": cv_y.round(3)}))
 
             st.markdown('''
-                <div class="info">ℹ️ O <i>Coeficiente de Variação</i> (C.V.) mede o quanto os valores de uma variável são dispersos em relação à sua média. Quanto maior a porcentagem, mais instável ou inconsistente é aquela variável</div>
+                <div class="info info-page">ℹ️ O <i>Coeficiente de Variação</i> (C.V.) mede o quanto os valores de uma variável são dispersos em relação à sua média. Quanto maior a porcentagem, mais instável ou inconsistente é aquela variável</div>
             ''', unsafe_allow_html=True)
 
             # Quantidade de outliers usando IQR para ambos eixos
@@ -616,7 +607,7 @@ def plane():
             st.dataframe(pd.DataFrame({f"Qtd de Outliers ({x_col})": outliers_x, f"Qtd de Outliers ({y_col})": outliers_y}))
 
             st.markdown('''
-                <div class="info">ℹ️ <i>Outlier</i> é um valor que se destaca dos demais em um conjunto de dados, sendo muito diferente do padrão ou da maioria dos outros valores.</div>
+                <div class="info info-page">ℹ️ <i>Outlier</i> é um valor que se destaca dos demais em um conjunto de dados, sendo muito diferente do padrão ou da maioria dos outros valores.</div>
             ''', unsafe_allow_html=True)
 
         st.markdown('''

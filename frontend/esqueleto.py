@@ -6,6 +6,20 @@ from streamlit_extras.metric_cards import style_metric_cards
 def esqueleto():
     st.sidebar.image("frontend\\image\\music.png", width=150)
 
+    st.sidebar.markdown('''
+        <h1 class="emoji-after">Navegue por aqui!</h1>
+        <style>
+            h1 {
+                font-size: 3em;
+                text-align: center; 
+            }
+            
+            .emoji-after:hover::after {
+                content: "👇"
+            }
+        </style>
+    ''', unsafe_allow_html=True)
+
     page = st.sidebar.radio("Ir para:", ["Visão Geral", "Comparativo Entre Artistas"])
 
     if page == "Visão Geral":
