@@ -82,8 +82,8 @@ PROJETO_FINAL_SENAI/
 <h3>Pré-requisitos:</h3>
 <ul>
   <li>Python v3.13.3 ou superior</li>
+  <li>PostegreSQL v17.5 ou superior</li>
   <li>Git instalado</li>
-  <li>PostegreSQL instalado</li>
   <li>Navegador moderno (Chrome, Firefox, etc.)</li>
 </ul>
 
