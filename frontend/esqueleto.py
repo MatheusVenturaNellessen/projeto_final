@@ -1,10 +1,54 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from PIL import Image
 from streamlit_extras.metric_cards import style_metric_cards
 
 def esqueleto():
-    st.sidebar.image("frontend\\image\\music.png", width=150)
+
+    img = Image.open("frontend/image/music.png")
+
+    # Centralize usando coluna vazia antes e depois
+    col1, col2, col3 = st.sidebar.columns([1, 2, 1])
+    with col2:
+        st.image(img, width=150)
+
+    st.markdown("""
+    <style>
+    /* Fonte principal */
+    body, .css-... {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    /* Navbar / barra lateral */
+    [data-testid="stSidebar"] {
+        background-color: #A64962;
+    }
+
+    /* Títulos principais */
+    h1, h2, h3, h4, h5, h6 {
+        color: #D92588;
+    }
+
+    /* Cards métricas */
+    [data-testid="metric-container"] {
+        background-color: #fff1f5;
+        border-radius: 8px;
+    }
+
+    /* Botões e abas selecionadas */
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        background-color: #8C2771 !important;
+        color: white !important;
+    }
+
+    /* Ícones de música e avião - cor padrão da paleta original */
+    .main-container .emoji-after::after {
+        content: "🎙️";
+        color: #A64962;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
     st.sidebar.markdown('''
         <h1 class="emoji-after">Navegue por aqui!</h1>
@@ -25,7 +69,6 @@ def esqueleto():
     if page == "Visão Geral":
 
         st.title("🎵 Visão Geral do Spotify 2023")
-        st.markdown("Análise completa das músicas mais populares do Spotify em 2023")
 
         # Carregar dados
         @st.cache_data
