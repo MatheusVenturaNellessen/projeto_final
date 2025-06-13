@@ -4,6 +4,11 @@ import numpy as np
 import plotly.express as px
 from streamlit_folium import st_folium
 import folium
+from PIL import Image
+from utils.anac.views import (
+    select_view_rpk, select_view_ask, select_view_rtk, select_view_atk,
+    select_view_loadfactor, select_view_eficiencia_carga
+)
 
 # ============== CONFIG E DADOS ==============
 def plane():
@@ -402,29 +407,29 @@ def plane():
                 </div>
             ''', unsafe_allow_html=True)
             
-    metric_functions = {
-        "rpk": select_view_rpk,
-        "ask": select_view_ask,
-        "rtk": select_view_rtk,
-        "atk": select_view_atk,
-        "load_factor": select_view_loadfactor,
-        "eficiencia_carga": select_view_eficiencia_carga,
-    }
+        metric_functions = {
+            "rpk": select_view_rpk,
+            "ask": select_view_ask,
+            "rtk": select_view_rtk,
+            "atk": select_view_atk,
+            "load_factor": select_view_loadfactor,
+            "eficiencia_carga": select_view_eficiencia_carga,
+        }
 
-    # Lista de opções para o selectbox
-    opcoes = list(metric_functions.keys())
+        # Lista de opções para o selectbox
+        opcoes = list(metric_functions.keys())
 
-    # Sidebar
-    st.sidebar.markdown('''<h2 class="emoji-after">Personalize as Métricas!</h2>''', unsafe_allow_html=True)
-    metrica_rank = st.sidebar.selectbox("Escolha a métrica:", options=opcoes, index=0)
+        # Sidebar
+        st.sidebar.markdown('''<h2 class="emoji-after">Personalize as Métricas!</h2>''', unsafe_allow_html=True)
+        metrica_rank = st.sidebar.selectbox("Escolha a métrica:", options=opcoes, index=0)
 
-    # Executa a função correspondente
-    top5 = metric_functions[metrica_rank]()
+        # Executa a função correspondente
+        top5 = metric_functions[metrica_rank]()
 
-    # Histograma
-    st.markdown('''<hr>''', unsafe_allow_html=True)
-    st.markdown('''<h2>Histograma: Métricas por Empresa</h2>''', unsafe_allow_html=True)
-    st.bar_chart(top5.set_index("empresa_sigla")[metrica_rank], use_container_width=True, x_label='Top 5 Empresas', y_label='Valor da Métrica')
+        # Histograma
+        st.markdown('''<hr>''', unsafe_allow_html=True)
+        st.markdown('''<h2>Histograma: Métricas por Empresa</h2>''', unsafe_allow_html=True)
+        st.bar_chart(top5.set_index("empresa_sigla")[metrica_rank], use_container_width=True, x_label='Top 5 Empresas', y_label='Valor da Métrica')
 
         st.markdown('''<hr>''', unsafe_allow_html=True)
         st.markdown('''<h2>SQL View: Métricas por Empresa</h2>''', unsafe_allow_html=True)
