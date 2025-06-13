@@ -528,7 +528,7 @@ def plane():
         st.markdown('''
 
         <h1>🔍 Análise Estratégica das Operações Aéreas no Brasil</h1>
-        <p><strong>(Foco no Aeroporto de Guarulhos)</strong></p>
+        <p align="center"><strong>(Foco no Aeroporto de Guarulhos)</strong></p>
 
         <h2>Visão Geral das Operações</h2>
         <ul>
@@ -541,68 +541,66 @@ def plane():
             <li>Voos com origem no Brasil: <strong>1.884</strong></li>
             <li>Voos com destino ao Brasil: <strong>1.887</strong></li>
         </ul>
-        <p><em>Indicador de equilíbrio na conectividade internacional e doméstica.</em></p>
+        <p align="center"><em>Indicador de equilíbrio na conectividade internacional e doméstica.</em></p>
 
         <h2>Carga & Combustível</h2>
         <h3>Dados gerais:</h3>
         <ul>
-        <li>Combustível total consumido: <strong>1,71 bilhões de litros</strong></li>
-        <li>Carga total transportada: <strong>458,8 milhões de Kg</strong></li>
+            <li>Combustível total consumido: <strong>1,71 bilhões de litros</strong></li>
+            <li>Carga total transportada: <strong>458,8 milhões de Kg</strong></li>
         </ul>
 
-        <h4>Guarulhos isoladamente:</h4>
+        <h4>Dados de Guarulhos:</h4>
         <ul>
-        <li>Combustível: <strong>730,6 milhões de litros (42,6% do total nacional)</strong></li>
-        <li>Movimentação de passageiros: <strong>14,6 milhões</strong></li>
+            <li>Combustível total consumido: <strong>730,6 milhões de litros (42,6% do total nacional)</strong></li>
+            <li>Movimentação total de passageiros: <strong>14,6 milhões</strong></li>
         </ul>
-        <p>Guarulhos concentra uma parte significativa dos recursos logísticos e operacionais, sendo um ponto de atenção para políticas de eficiência e sustentabilidade.</p>
+        <p align="center">Guarulhos concentra uma parte significativa dos recursos logísticos e operacionais, sendo um ponto de atenção para políticas de eficiência e sustentabilidade.</p>
 
-        <h3>🧭 Análise de Mercado – Potencial Estratégico de Guarulhos</h3>
-        <p>Com quase 43% de todo o combustível consumido no setor aéreo nacional, o aeroporto de Guarulhos assume o papel de ponto central da aviação brasileira, tanto em mobilidade de passageiros quanto em transporte de cargas. Este volume expressivo de movimentação não apenas posiciona Guarulhos como hub logístico dominante, mas também o torna altamente sensível a oscilações nos custos de combustível e políticas regulatórias.</p>
+        <h2>Análise de Mercado – Potencial Estratégico de Guarulhos</h2>
+        <p align="center">Com quase 43% de todo o combustível consumido no setor aéreo nacional, o aeroporto de Guarulhos assume o papel de ponto central da aviação brasileira, tanto em mobilidade de passageiros quanto em transporte de cargas. Este volume expressivo de movimentação não apenas posiciona Guarulhos como hub logístico dominante, mas também o torna altamente sensível a oscilações nos custos de combustível e políticas regulatórias.</p>
 
-        <h4>✈️ Demanda Concentrada:</h4>
-        <p>A movimentação de 14,6 milhões de passageiros revela a importância de Guarulhos como porta de entrada e saída do país, com impacto direto na receita das companhias aéreas, no turismo, no comércio internacional e no fluxo corporativo. Com a crescente urbanização e centralização econômica na região Sudeste, espera-se que essa demanda continue elevada nos próximos anos, exigindo respostas estruturais do setor.</p>
+        <h3>Demanda Concentrada</h3>
+        <p align="center">A movimentação de 14,6 milhões de passageiros revela a importância de Guarulhos como porta de entrada e saída do país, com impacto direto na receita das companhias aéreas, no turismo, no comércio internacional e no fluxo corporativo. Com a crescente urbanização e centralização econômica na região Sudeste, espera-se que essa demanda continue elevada nos próximos anos, exigindo respostas estruturais do setor.</p>
 
-        <h4>📦 Carga como Oportunidade de Expansão:</h4>
-        <p>Embora o relatório não detalhe a fatia de carga operada especificamente por Guarulhos, a infraestrutura e localização do aeroporto o tornam altamente competitivo no mercado de frete aéreo. Isso representa uma oportunidade clara de:</p>
+        <h3>Carga como Oportunidade de Expansão</h3>
+        <p align="center">Embora o relatório não detalhe a fatia de carga operada especificamente por Guarulhos, a infraestrutura e localização do aeroporto o tornam altamente competitivo no mercado de frete aéreo. Isso representa uma oportunidade clara de:</p>
         <ul>
-        <li>Expandir terminais de carga com tecnologia de automação;</li>
-        <li>Atrair operadores logísticos globais;</li>
-        <li>Promover rotas exclusivas de carga (freighters) com maior valor agregado.</li>
+            <li>Expandir terminais de carga com tecnologia de automação;</li>
+            <li>Atrair operadores logísticos globais;</li>
+            <li>Promover rotas exclusivas de carga (<i>freighters</i>) com maior valor agregado.</li>
         </ul>
 
-        <h4>⚠️ Pressões e Riscos de Mercado:</h4>
+        <h3>⚠️ Pressões e Riscos de Mercado:</h3>
         <ul>
-        <li><strong>Custo do combustível:</strong> O querosene de aviação representa o principal custo variável do setor. Com alta concentração de consumo em Guarulhos, oscilações no preço internacional do petróleo afetam diretamente a lucratividade das operações que passam pelo aeroporto.</li>
-        <li><strong>Conflitos geopolíticos e mudanças climáticas</strong> podem comprometer a regularidade do abastecimento e aumentar o custo de operação.</li>
-        <li><strong>Regulações ambientais futuras</strong> (ex: taxas de carbono, metas de descarbonização) terão impacto direto sobre aeroportos com maior pegada de carbono — caso de Guarulhos.</li>
+            <li><strong>Custo do combustível:</strong> O querosene de aviação representa o principal custo variável do setor. Com alta concentração de consumo em Guarulhos, oscilações no preço internacional do petróleo afetam diretamente a lucratividade das operações que passam pelo aeroporto.</li>
+            <li><strong>Conflitos geopolíticos e mudanças climáticas</strong> podem comprometer a regularidade do abastecimento e aumentar o custo de operação.</li>
+            <li><strong>Regulações ambientais futuras</strong> (ex: taxas de carbono, metas de descarbonização) terão impacto direto sobre aeroportos com maior pegada de carbono — caso de Guarulhos.</li>
         </ul>
 
-        <h3>💡 Perspectivas e Recomendação de Mercado</h3>
+        <h3>Perspectivas e Recomendação de Mercado</h3>
         <p>Guarulhos já opera como hub dominante, mas sua posição também representa uma exposição crítica a riscos operacionais e ambientais. Para manter competitividade e atender às exigências futuras do mercado, é essencial que os players do setor (companhias aéreas, operadoras logísticas e governo) adotem estratégias como:</p>
         <ul>
-        <li>Investimentos em eficiência energética e SAF (combustível sustentável de aviação) para reduzir a dependência do querosene fóssil.</li>
-        <li>Ampliação da capacidade de carga aérea, com foco em e-commerce internacional, produtos farmacêuticos e eletrônicos — segmentos de alta rentabilidade.</li>
-        <li>Parcerias estratégicas com plataformas de logística digital para otimização do uso do porão das aeronaves.</li>
-        <li>Política de incentivos fiscais e tarifários para operações sustentáveis que utilizem Guarulhos como base.</li>
+            <li>Investimentos em eficiência energética e SAF (combustível sustentável de aviação) para reduzir a dependência do querosene fóssil.</li>
+            <li>Ampliação da capacidade de carga aérea, com foco em e-commerce internacional, produtos farmacêuticos e eletrônicos — segmentos de alta rentabilidade.</li>
+            <li>Parcerias estratégicas com plataformas de logística digital para otimização do uso do porão das aeronaves.</li>
+            <li>Política de incentivos fiscais e tarifários para operações sustentáveis que utilizem Guarulhos como base.</li>
         </ul>
 
-        <h3>🏢 3. Desempenho das Empresas Aéreas</h3>
+        <h2>Desempenho das Empresas Aéreas</h2>
         <ul>
-        <li><strong>RPK</strong> (Receita por Passageiro-Km): 20,98</li>
-        <li><strong>ASK</strong> (Assentos disponíveis-Km): 25,06</li>
-        <li><strong>Fator de Ocupação (Load Factor):</strong> 83,74%</li>
-        <li><strong>Eficiência de Carga:</strong> 63,88%</li>
+            <li><strong>RPK</strong> (Receita por Passageiro-Km): 20,98</li>
+            <li><strong>ASK</strong> (Assentos disponíveis-Km): 25,06</li>
+            <li><strong>Fator de Ocupação (Load Factor):</strong> 83,74%</li>
+            <li><strong>Eficiência de Carga:</strong> 63,88%</li>
         </ul>
 
-        <h4>Interpretação:</h4>
+        <h3>Interpretação</h4>
         <ul>
-        <li>Alta ocupação média dos voos (83,74%) indica bom aproveitamento comercial.</li>
-        <li>Eficiência de carga (63,88%) revela oportunidades de otimização logística.</li>
-        <li>RPK vs. ASK aponta uso eficaz da capacidade disponível.</li>
+            <li>Alta ocupação média dos voos (83,74%) indica bom aproveitamento comercial.</li>
+            <li>Eficiência de carga (63,88%) revela oportunidades de otimização logística.</li>
+            <li>RPK vs. ASK aponta uso eficaz da capacidade disponível.</li>
         </ul>
-
-        
         ''', unsafe_allow_html=True)
 
     # ============= INFO =============
