@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from PIL import Image
-import matplotlib.pyplot as plt
 import plotly.express as px
 from streamlit_folium import st_folium
 import folium
@@ -12,13 +10,7 @@ def plane():
     st.markdown("""
         <style>
             .container {
-                display: flex;
-                flex-direction: column;
-                justify-content: center; 
-                align-items: center;
                 background-color: white;
-                filter: opacity(0.9);
-                min-height: 230px;
                 border-radius: 15px;
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
                 margin: 10px; padding: 20px;
@@ -26,20 +18,21 @@ def plane():
             }
             
             .container:hover {
-                filter: opacity(1);
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
                 border-left: 5px solid #302681;
+                cursor: pointer;
                 transition: filter box-shadow 0.5s ease; 
             }
 
             .title {
-                font-size: 1.25em;
-                font-weight: 900;   
+                font-size: 1.1em;
+                font-weight: 900;
+                text-align: left;   
             }
                 
             .text {
                 color: #29846A;
-                font-size: 2em;
+                font-size: 2.5em;
                 font-weight: 600;
             }
                 
@@ -53,13 +46,11 @@ def plane():
                 color: #302681;
                 font-size: 1em;
                 font-weight: 600;
-                text-align: left;    
+                text-align: center;    
             }
                 
             .container-m {
                 background-color: white;
-                filter: opacity(0.9);
-                min-height: 200px;
                 border-radius: 15px;
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
                 margin: 5px; padding: 10px;
@@ -67,28 +58,30 @@ def plane():
             }
             
             .container-m:hover {
-                filter: opacity(1);
                 box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
                 border-left: 5px solid #302681;
+                cursor: pointer;
                 transition: filter box-shadow 0.5s ease;  
             }
 
             .title-m {
                 font-size: 1.5em;
-                font-weight: 900;   
+                font-weight: 900;  
+                text-align: left;    
+ 
             }
                 
             .text-m {
                 color: #29846A;
-                font-size: 3em;
+                font-size: 3.5em;
                 font-weight: 600;
             }
             
             .info-m {
                 color: #302681;
-                font-size: 0.8em;
+                font-size: 1em;
                 font-weight: 600;
-                text-align: justify;    
+                text-align: center;    
             }
 
             h1 {
@@ -108,6 +101,45 @@ def plane():
                 text-align: center;
             }            
             
+            .col1:hover::after {
+                content: "Quantidade total de registros.";
+            }
+                
+            .col2:hover::after {
+                content: "Voos internacionais que chegam (+) e partem (-) do Brasil."
+            }
+            
+            .col6:hover::after {
+                content: "Voos que chegam (+) e partem (-).";    
+            }
+                
+            .col7:hover::after {
+                content: "Total de passageiros transportados.";    
+            }
+                
+            .col8:hover::after {
+                content: "Total de combustível consumido.";    
+            }
+                
+            .col9:hover::after {
+                content: "Total de passageiros vs. pela distância voada.";    
+            }
+            
+            .col10:hover::after {
+                content: "Capacidade total de transporte de passageiros.";    
+            }
+            
+            .col11:hover::after {
+                content: "Porcentagem de ocupação dos assentos disponíveis.";    
+            }
+            
+            .col12:hover::after {
+                content: "Porcentagem da capacidade total de carga utilizada.";    
+            }
+            
+            .info-page {
+                text-align: justify;   
+            }
         </style>
     """, unsafe_allow_html=True)
 
@@ -171,51 +203,48 @@ def plane():
 
         qtd_registros = df.shape[0]
 
-        qtd_passageiros_total = df['passageiros_pagos'].sum() + df['passageiros_gratis'].sum()
+        # qtd_passageiros_total = df['passageiros_pagos'].sum() + df['passageiros_gratis'].sum()
 
         qtd_combustivel_total = df['combustivel_litros'].sum()
         total_carga_kg = df['carga_paga_kg'].sum()
 
-        qtd_distancia_voada_total = df['distancia_voada_km'].sum() if 'distancia_voada_km' in df.columns else 0
+        # qtd_distancia_voada_total = df['distancia_voada_km'].sum() if 'distancia_voada_km' in df.columns else 0
 
         col1, col2, col3, col4 = st.columns(4)
         with col1:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Quantidade de Voos</div>
+                    <div class="title">Quantidade total de voos</div>
                     <div class="text">{qtd_registros:,.0f}</div>
-                    <div class="info">Quantidade total de registros</div>
+                    <div class="info col1">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
         
         with col2:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Voos Brasileiros</div>
-                    <div class="text">{qtd_entrando:,.0f} entradas</div>
-                    <div class="subtext">{qtd_saindo:,.0f} saídas</div>
-                    <div class="info">Voos internacionais que chegam e partem do Brasil</div>
+                    <div class="title">Voos brasileiros</div>
+                    <div class="text">{qtd_entrando:,.0f} + | {qtd_saindo:,.0f} -</div>
+                    <div class="info col2">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
         
         with col3:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Total de combustível</div>
-                    <div class="text">{qtd_combustivel_total:,.0f} L</div>
+                    <div class="title">Total de combustível (L)</div>
+                    <div class="text">{qtd_combustivel_total:,.0f}</div>
                 </div>
             ''', unsafe_allow_html=True)
         
         with col4:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Total de carga</div>
-                    <div class="text">{total_carga_kg:,.0f} Kg</div>
+                    <div class="title">Total de carga (Kg)</div>
+                    <div class="text">{total_carga_kg:,.0f}</div>
                 </div>
             ''', unsafe_allow_html=True)
             
-
-
         col5, col6, col7, col8 = st.columns(4)
 
         with col5:
@@ -223,7 +252,6 @@ def plane():
                 <div class="container">
                     <div class="title">Aeroporto mais frequentado</div>
                     <div class="text">{aeroporto_top1_nome}</div>
-                    <div class="subtext">{aeroporto_top1_qtd:,.0f} voos</div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -231,9 +259,8 @@ def plane():
             st.markdown(f'''
                 <div class="container">
                     <div class="title">Voos de {aeroporto_top1_nome}</div>
-                    <div class="text">{len(voos_entrando_gru):,.0f} entradas</div>
-                    <div class="subtext">{len(voos_saindo_gru):,.0f} saídas</div>
-                    <div class="info">Voos chegam e partem de {aeroporto_top1_nome}</div>
+                    <div class="text">{len(voos_entrando_gru):,.0f} + | {len(voos_saindo_gru):,.0f} -</div>
+                    <div class="info col6">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -242,16 +269,16 @@ def plane():
                 <div class="container">
                     <div class="title">Passageiros em {aeroporto_top1_nome}</div>
                     <div class="text">{int(total_passageiros_gru):,.0f}</div>
-                    <div class="info">Total de passageiros transportados</div>
+                    <div class="info col7">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
         
         with col8:
             st.markdown(f'''
                 <div class="container">
-                    <div class="title">Combustível em {aeroporto_top1_nome}</div>
-                    <div class="text">{int(total_combustivel_gru):,.0f} L</div>
-                    <div class="info">Total de combustível consumido</div>
+                    <div class="title">Combustível em {aeroporto_top1_nome} (L)</div>
+                    <div class="text">{int(total_combustivel_gru):,.0f}</div>
+                    <div class="info col8">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -335,37 +362,37 @@ def plane():
             .reset_index())
 
         # Cards customizados
-        col4, col5, col6, col7 = st.columns(4)
-        with col4:
+        col9, col10, col11, col12 = st.columns(4)
+        with col9:
             st.markdown(f'''
                 <div class="container-m">
                     <div class="title-m">RPK</div>
                     <div class="text-m">{(agg.rpk.iloc[-1] / 1e9):.2f}</div>
-                    <div class="info-m"> Quantidade total de passageiros transportados multiplicada pela distância voada.</div>
+                    <div class="info-m col9">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
-        with col5:
+        with col10:
             st.markdown(f'''
                 <div class="container-m">
                     <div class="title-m">ASK</div>
                     <div class="text-m">{(agg.ask.iloc[-1] / 1e9):.2f}</div>
-                    <div class="info-m">Capacidade total de transporte de passageiros.</div>
+                    <div class="info-m col10">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
-        with col6:
+        with col11:
             st.markdown(f'''
                 <div class="container-m">
                     <div class="title-m">Load Factor (%)</div>
                     <div class="text-m">{(agg.load_factor.iloc[-1]):.2f}</div>
-                    <div class="info-m">Porcentagem de ocupação dos assentos disponíveis.</div>
+                    <div class="info-m col11">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
-        with col7:
+        with col12:
             st.markdown(f'''
                 <div class="container-m">
                     <div class="title-m">Eficiência Carga (%)</div>
                     <div class="text-m">{(agg.eficiencia_carga.iloc[-1]):.2f}</div>
-                    <div class="info-m">Porcentagem da capacidade total de carga utilizada.</div>
+                    <div class="info-m col12">ⓘ </div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -425,65 +452,65 @@ def plane():
         df_filtrado = df[df['empresa_sigla'].isin(st.session_state['empresas_selecionadas'])]
 
         # ============= 1º Gráfico =============
-        st.markdown('''<h3 class="g-title">Fator de Ocupação (RPK / ASK) por Empresa</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Fator de Ocupação (RPK / ASK)</h3>''', unsafe_allow_html=True)
         df_f_ocupacao = df_filtrado.groupby(['data', 'empresa_sigla'])['fator_ocupacao'].mean().reset_index()
         df_pivot_f_ocupacao = df_f_ocupacao.pivot(index='data', columns='empresa_sigla', values='fator_ocupacao').fillna(0)
-        st.line_chart(df_pivot_f_ocupacao)
+        st.line_chart(df_pivot_f_ocupacao, x_label='Período', y_label='Coeficiente F.O.')
 
         st.markdown('''<p><b>Análise</b>: Quanto mais próximo de 1.0 (100%), melhor o uso dos assentos disponíveis.</p>''', unsafe_allow_html=True)
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 2º Gráfico =============
-        st.markdown('''<h3 class="g-title">Fator de Carga (RTK / ATK) por Empresa</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Fator de Carga (RTK / ATK)</h3>''', unsafe_allow_html=True)
 
         df_f_carga = df_filtrado.groupby(['data', 'empresa_sigla'])['fator_carga'].mean().reset_index()
         df_pivot_f_carga = df_f_carga.pivot(index='data', columns='empresa_sigla', values='fator_carga').fillna(0)
-        st.line_chart(df_pivot_f_carga)
+        st.line_chart(df_pivot_f_carga, x_label='Período', y_label='Coeficiente F.C.')
 
         st.markdown('''<p><b>Análise</b>: Valores mais baixos representam muita capacidade ociosa.</p>''', unsafe_allow_html=True)
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 3º Gráfico =============
-        st.markdown('''<h3 class="g-title">Média de Passageiros por Decolagem</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Média de Passageiros por Voo</h3>''', unsafe_allow_html=True)
 
         df_passageiros_decolagem = df_filtrado.groupby(['data', 'empresa_sigla'])['passageiros_por_decolagem'].mean().reset_index()
         df_pivot_passageiros_decolagem = df_passageiros_decolagem.pivot(index='data', columns='empresa_sigla', values='passageiros_por_decolagem').fillna(0)
-        st.line_chart(df_pivot_passageiros_decolagem)
+        st.line_chart(df_pivot_passageiros_decolagem, x_label='Período', y_label='Média de Passageiros')
 
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 4º Gráfico =============
-        st.markdown('''<h3 class="g-title">Média de Carga Total por Voo (em Kg)</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Carga Total Média por Voo (em quilogramas)</h3>''', unsafe_allow_html=True)
 
         df_carga_voo = df_filtrado.groupby(['data', 'empresa_sigla'])['carga_por_voo'].mean().reset_index()
         df_pivot_carga_voo = df_carga_voo.pivot(index='data', columns='empresa_sigla', values='carga_por_voo').fillna(0)
-        st.line_chart(df_pivot_carga_voo)
+        st.line_chart(df_pivot_carga_voo, x_label='Período', y_label='Média de Carga Total (Kg)')
     
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 5º Gráfico =============
-        st.markdown('''<h3 class="g-title">Distância Média por Voo (em Km)</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Distância Média por Voo (em quilômetros)</h3>''', unsafe_allow_html=True)
         df_distancia_voo = df_filtrado.groupby(['data', 'empresa_sigla'])['distancia_por_voo'].mean().reset_index()
         df_pivot_distancia_voo = df_distancia_voo.pivot(index='data', columns='empresa_sigla', values='distancia_por_voo').fillna(0)
-        st.line_chart(df_pivot_distancia_voo)
+        st.line_chart(df_pivot_distancia_voo, x_label='Período', y_label='Distância Média Percorrida (Km)')
 
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 6º Gráfico =============
-        st.markdown('''<h3 class="g-title">Combustível por Passageiro (em litros)</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Combustível Médio por Passageiro (em litros)</h3>''', unsafe_allow_html=True)
 
         df_combustivel_passageiro = df_filtrado.groupby(['data', 'empresa_sigla'])['combustivel_por_passageiro'].mean().reset_index()
         df_pivot_combustivel_passageiro = df_combustivel_passageiro.pivot(index='data', columns='empresa_sigla', values='combustivel_por_passageiro').fillna(0)
-        st.line_chart(df_pivot_combustivel_passageiro)
+        st.line_chart(df_pivot_combustivel_passageiro, x_label='Período', y_label='Combustível Médio (L)')
 
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
         # ============= 7º Gráfico =============
-        st.markdown('''<h3 class="g-title">Assentos por Voo</h3>''', unsafe_allow_html=True)
+        st.markdown('''<h3 class="g-title">Quantidade Média de Assentos por Voo</h3>''', unsafe_allow_html=True)
 
         df_assentos_voo = df_filtrado.groupby(['data', 'empresa_sigla'])['assentos_por_voo'].mean().reset_index()
         df_pivot_assentos_voo = df_assentos_voo.pivot(index='data', columns='empresa_sigla', values='assentos_por_voo').fillna(0)
-        st.line_chart(df_pivot_assentos_voo)
+        st.line_chart(df_pivot_assentos_voo, x_label='Período', y_label='Qtd. Média de Assentos')
 
         st.markdown('''<hr>''', unsafe_allow_html=True)
 
@@ -492,74 +519,91 @@ def plane():
 
         df_payload_efficiency = df_filtrado.groupby(['data', 'empresa_sigla'])['payload_efficiency'].mean().reset_index()
         df_payload_efficiency = df_payload_efficiency.pivot(index='data', columns='empresa_sigla', values='payload_efficiency').fillna(0)
-        st.line_chart(df_payload_efficiency)
+        st.line_chart(df_payload_efficiency, x_label='Período', y_label='Payload Efficiency')
 
         st.markdown('''<p><b>Análise</b>: Quanto maior o coeficiente, maior a capacidade total utilizada.</p>''', unsafe_allow_html=True)
 
-        # datas_disponiveis = sorted(df['data'].dt.to_period('M').unique().astype(str))
-        # data_selecionada = st.sidebar.selectbox("Selecione o mês:", datas_disponiveis)
-        # df['periodo'] = df['data'].dt.to_period('M').astype(str)
-        # df = df[df['periodo'] == data_selecionada]
-
-        # # Filtro de empresas
-        # empresas_especificas = sorted(['AZU', 'LAN', 'GLO', 'AAL', 'UAE'])
-        # if 'empresas_selecionadas' not in st.session_state:
-        #     st.session_state['empresas_selecionadas'] = empresas_especificas
-
-        # if st.sidebar.button("Resetar Filtro"):
-        #     st.session_state['empresas_selecionadas'] = empresas_especificas
-
-        # empresas_selecionadas = st.sidebar.multiselect(
-        #     "Selecione as empresas (por sigla):",
-        #     options=sorted(df['empresa_sigla'].unique()),
-        #     default=st.session_state['empresas_selecionadas'],
-        #     key='empresas_selecionadas'
-        # )
-
-        # df_filtrado = df[df['empresa_sigla'].isin(empresas_selecionadas)]
-
-        # # Gráfico 1 – Fator de Ocupação (RPK / ASK)
-        # st.markdown("### Fator de Ocupação por Empresa")
-        # dados = df_filtrado.groupby('empresa_sigla')['fator_ocupacao'].mean()
-        # st.bar_chart(dados)
-
-        # # Gráfico 2 – Fator de Carga (RTK / ATK)
-        # st.markdown("### Fator de Carga por Empresa")
-        # dados = df_filtrado.groupby('empresa_sigla')['fator_carga'].mean()
-        # st.area_chart(dados)
-
-        # # Gráfico 3 – Passageiros por Decolagem
-        # st.markdown("### Passageiros por Decolagem")
-        # dados = df_filtrado.groupby('empresa_sigla')['passageiros_por_decolagem'].mean()
-        # st.bar_chart(dados)
-
-        # # Gráfico 4 – Carga por Voo
-        # st.markdown("### Carga Total por Voo (Kg)")
-        # dados = df_filtrado.groupby('empresa_sigla')['carga_por_voo'].mean()
-        # st.bar_chart(dados)
-
-        # # Gráfico 5 – Distância Média por Voo
-        # st.markdown("### Distância Média por Voo (Km)")
-        # dados = df_filtrado.groupby('empresa_sigla')['distancia_por_voo'].mean()
-        # st.area_chart(dados)
-
-        # # Gráfico 6 – Combustível por Passageiro
-        # st.markdown("### Combustível por Passageiro (litros)")
-        # dados = df_filtrado.groupby('empresa_sigla')['combustivel_por_passageiro'].mean()
-        # st.bar_chart(dados)
-
-        # # Gráfico 7 – Assentos por Voo
-        # st.markdown("### Assentos por Voo")
-        # dados = df_filtrado.groupby('empresa_sigla')['assentos_por_voo'].mean()
-        # st.line_chart(dados)
-
-        # # Gráfico 8 – Eficiência da Carga Útil (Payload)
-        # st.markdown("### Eficiência da Carga Útil")
-        # dados = df_filtrado.groupby('empresa_sigla')['payload_efficiency'].mean()
-        # st.bar_chart(dados)
     # ============= INSIGHTS =============
     if page == "Insights":
-        st.markdown('''<h3>Olá mundo!</h3>''', unsafe_allow_html=True)
+        st.markdown('''
+
+        <h1>🔍 Análise Estratégica das Operações Aéreas no Brasil</h1>
+        <p><strong>(Foco no Aeroporto de Guarulhos)</strong></p>
+
+        <h2>Visão Geral das Operações</h2>
+        <ul>
+            <li>Voos totais registrados: <strong>13.329</strong></li>
+            <li>Aeroporto com maior movimentação: <strong>Guarulhos (2.678 voos)</strong></li>
+        </ul>
+
+        <h3> Distribuição Nacional:</h3>
+        <ul>
+            <li>Voos com origem no Brasil: <strong>1.884</strong></li>
+            <li>Voos com destino ao Brasil: <strong>1.887</strong></li>
+        </ul>
+        <p><em>Indicador de equilíbrio na conectividade internacional e doméstica.</em></p>
+
+        <h2>Carga & Combustível</h2>
+        <h3>Dados gerais:</h3>
+        <ul>
+        <li>Combustível total consumido: <strong>1,71 bilhões de litros</strong></li>
+        <li>Carga total transportada: <strong>458,8 milhões de Kg</strong></li>
+        </ul>
+
+        <h4>Guarulhos isoladamente:</h4>
+        <ul>
+        <li>Combustível: <strong>730,6 milhões de litros (42,6% do total nacional)</strong></li>
+        <li>Movimentação de passageiros: <strong>14,6 milhões</strong></li>
+        </ul>
+        <p>Guarulhos concentra uma parte significativa dos recursos logísticos e operacionais, sendo um ponto de atenção para políticas de eficiência e sustentabilidade.</p>
+
+        <h3>🧭 Análise de Mercado – Potencial Estratégico de Guarulhos</h3>
+        <p>Com quase 43% de todo o combustível consumido no setor aéreo nacional, o aeroporto de Guarulhos assume o papel de ponto central da aviação brasileira, tanto em mobilidade de passageiros quanto em transporte de cargas. Este volume expressivo de movimentação não apenas posiciona Guarulhos como hub logístico dominante, mas também o torna altamente sensível a oscilações nos custos de combustível e políticas regulatórias.</p>
+
+        <h4>✈️ Demanda Concentrada:</h4>
+        <p>A movimentação de 14,6 milhões de passageiros revela a importância de Guarulhos como porta de entrada e saída do país, com impacto direto na receita das companhias aéreas, no turismo, no comércio internacional e no fluxo corporativo. Com a crescente urbanização e centralização econômica na região Sudeste, espera-se que essa demanda continue elevada nos próximos anos, exigindo respostas estruturais do setor.</p>
+
+        <h4>📦 Carga como Oportunidade de Expansão:</h4>
+        <p>Embora o relatório não detalhe a fatia de carga operada especificamente por Guarulhos, a infraestrutura e localização do aeroporto o tornam altamente competitivo no mercado de frete aéreo. Isso representa uma oportunidade clara de:</p>
+        <ul>
+        <li>Expandir terminais de carga com tecnologia de automação;</li>
+        <li>Atrair operadores logísticos globais;</li>
+        <li>Promover rotas exclusivas de carga (freighters) com maior valor agregado.</li>
+        </ul>
+
+        <h4>⚠️ Pressões e Riscos de Mercado:</h4>
+        <ul>
+        <li><strong>Custo do combustível:</strong> O querosene de aviação representa o principal custo variável do setor. Com alta concentração de consumo em Guarulhos, oscilações no preço internacional do petróleo afetam diretamente a lucratividade das operações que passam pelo aeroporto.</li>
+        <li><strong>Conflitos geopolíticos e mudanças climáticas</strong> podem comprometer a regularidade do abastecimento e aumentar o custo de operação.</li>
+        <li><strong>Regulações ambientais futuras</strong> (ex: taxas de carbono, metas de descarbonização) terão impacto direto sobre aeroportos com maior pegada de carbono — caso de Guarulhos.</li>
+        </ul>
+
+        <h3>💡 Perspectivas e Recomendação de Mercado</h3>
+        <p>Guarulhos já opera como hub dominante, mas sua posição também representa uma exposição crítica a riscos operacionais e ambientais. Para manter competitividade e atender às exigências futuras do mercado, é essencial que os players do setor (companhias aéreas, operadoras logísticas e governo) adotem estratégias como:</p>
+        <ul>
+        <li>Investimentos em eficiência energética e SAF (combustível sustentável de aviação) para reduzir a dependência do querosene fóssil.</li>
+        <li>Ampliação da capacidade de carga aérea, com foco em e-commerce internacional, produtos farmacêuticos e eletrônicos — segmentos de alta rentabilidade.</li>
+        <li>Parcerias estratégicas com plataformas de logística digital para otimização do uso do porão das aeronaves.</li>
+        <li>Política de incentivos fiscais e tarifários para operações sustentáveis que utilizem Guarulhos como base.</li>
+        </ul>
+
+        <h3>🏢 3. Desempenho das Empresas Aéreas</h3>
+        <ul>
+        <li><strong>RPK</strong> (Receita por Passageiro-Km): 20,98</li>
+        <li><strong>ASK</strong> (Assentos disponíveis-Km): 25,06</li>
+        <li><strong>Fator de Ocupação (Load Factor):</strong> 83,74%</li>
+        <li><strong>Eficiência de Carga:</strong> 63,88%</li>
+        </ul>
+
+        <h4>Interpretação:</h4>
+        <ul>
+        <li>Alta ocupação média dos voos (83,74%) indica bom aproveitamento comercial.</li>
+        <li>Eficiência de carga (63,88%) revela oportunidades de otimização logística.</li>
+        <li>RPK vs. ASK aponta uso eficaz da capacidade disponível.</li>
+        </ul>
+
+        
+        ''', unsafe_allow_html=True)
 
     # ============= INFO =============
     if page == "Informações":
@@ -580,7 +624,7 @@ def plane():
             colunas_numericas = ['passageiros_pagos', 'passageiros_gratis', 'carga_paga_kg', 'carga_gratis_kg', 'correios_kg', 'ask', 'rpk', 'atk', 'rtk', 'combustivel_litros', 'distancia_voada_km', 'decolagens', 'carga_paga_km', 'carga_gratis_km', 'correio_km', 'assentos', 'payload', 'HORAS_VOADAS', 'bagagem_kg']
 
             st.sidebar.markdown('''
-                <h2 class="emoji-after">Personalize as Métricas!</h2>
+                <h2 class="emoji-after">Personalize as Análises!</h2>
             ''', unsafe_allow_html=True)
             empresas = sorted(df['empresa_sigla'].unique())
             default = sorted(['AZU', 'LAN', 'GLO', 'AAL', 'UAE'])
@@ -624,7 +668,7 @@ def plane():
             st.dataframe(pd.DataFrame({f"C.V. ({x_col})": cv_x.round(3), f"C.V. ({y_col})": cv_y.round(3)}))
 
             st.markdown('''
-                <div class="info">ℹ️ O <i>Coeficiente de Variação</i> (C.V.) mede o quanto os valores de uma variável são dispersos em relação à sua média. Quanto maior a porcentagem, mais instável ou inconsistente é aquela variável</div>
+                <div class="info info-page">ℹ️ O <i>Coeficiente de Variação</i> (C.V.) mede o quanto os valores de uma variável são dispersos em relação à sua média. Quanto maior a porcentagem, mais instável ou inconsistente é aquela variável</div>
             ''', unsafe_allow_html=True)
 
             # Quantidade de outliers usando IQR para ambos eixos
@@ -641,13 +685,13 @@ def plane():
             st.dataframe(pd.DataFrame({f"Qtd de Outliers ({x_col})": outliers_x, f"Qtd de Outliers ({y_col})": outliers_y}))
 
             st.markdown('''
-                <div class="info">ℹ️ <i>Outlier</i> é um valor que se destaca dos demais em um conjunto de dados, sendo muito diferente do padrão ou da maioria dos outros valores.</div>
+                <div class="info info-page">ℹ️ <i>Outlier</i> é um valor que se destaca dos demais em um conjunto de dados, sendo muito diferente do padrão ou da maioria dos outros valores.</div>
             ''', unsafe_allow_html=True)
 
         st.markdown('''
             <hr>
             
-            <p style="text-align: justify">Esta aplicação foi desenvolvida por <a href="https://www.linkedin.com/in/dev-matheusvn/" target="_blank">Matheus Ventura Nellessen</a>, <a href="" target="_blank">André</a>, <a href="" target="_blank">Heitor</a> e <a href="" target="_blank">Leonardo</a> como projeto final da capacitação em <i>Analytics</i>.</p>
+            <p style="text-align: justify">Esta aplicação foi desenvolvida por <a href="https://www.linkedin.com/in/dev-matheusvn/" target="_blank">Matheus V. Nellessen</a>, <a href="https://www.linkedin.com/in/andr%C3%A9-ciccozzi-71360b1b2/" target="_blank">André Ciccozzi</a>, <a href="" target="_blank">Heitor</a> e <a href="" target="_blank">Leonardo</a> como projeto final da capacitação em <i>Analytics</i>.</p>
                     
-            <p style="text-align: justify">Agradecimentos especiais a instrutora <a href="https://www.linkedin.com/in/daniella-torelli-3464b81a9/" target="_blank">Daniella Torelli</a>, profissional repleta de habilidades para ensinar, responsável pela nossa capacitação técnica nesta nova área.</p>                
+            <p style="text-align: justify">Agradecimentos especiais a instrutora <b>Daniella Torelli</b>, profissional repleta de habilidades para ensinar, responsável pela nossa capacitação técnica nesta nova área.</p>                
         ''', unsafe_allow_html=True)
