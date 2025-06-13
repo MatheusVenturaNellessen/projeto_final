@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 from sqlalchemy import create_engine
 import pandas as pd
+import numpy as np
 
 # Load DataFrame outside the function if it's used globally
 df = pd.read_csv("database\\anac\\anaca_2025_limpo.csv" , sep=';', encoding='latin1')
@@ -124,6 +125,7 @@ def select_view_rpk():
         ORDER BY rpk DESC
         LIMIT 5;
     """
+    print("Query RPK:\n", query.strip())
     cursor.execute(query)
     data = cursor.fetchall()
     conn.close()
@@ -140,6 +142,7 @@ def select_view_ask():
         ORDER BY ask DESC
         LIMIT 5;
     """
+    print("Query ASK:\n", query.strip())
     cursor.execute(query)
     data = cursor.fetchall()
     conn.close()
@@ -157,6 +160,7 @@ def select_view_rtk():
         ORDER BY rtk DESC
         LIMIT 5;
     """
+    print("Query RTK:\n", query.strip())
     cursor.execute(query)
     data = cursor.fetchall()
     conn.close()
@@ -174,6 +178,7 @@ def select_view_atk():
         ORDER BY atk DESC
         LIMIT 5;
     """
+    print("Query ATK:\n", query.strip())
     cursor.execute(query)
     data = cursor.fetchall()
     conn.close()
@@ -186,21 +191,24 @@ def select_view_loadfactor():
     
     cursor = conn.cursor()
     query = """
-        SELECT empresa_sigla, load_factor
+        SELECT empresa_sigla, rpk, ask
         FROM vw_metricas_agregadas_ultimo_mes
-        ORDER BY load_factor DESC
-        LIMIT 5;
     """
+    print("Query Load Factor (calculado no código):\n", query.strip())
     cursor.execute(query)
     data = cursor.fetchall()
     conn.close()
-    return pd.DataFrame(data, columns=['empresa_sigla', 'load_factor'])
+    
+    df = pd.DataFrame(data, columns=['empresa_sigla', 'rpk', 'ask'])
+    df['load_factor'] = 100 * df['rpk'] / df['ask'].replace(0, np.nan)
+    df = df.dropna(subset=['load_factor'])
+    return df.sort_values('load_factor', ascending=False).head(5)[['empresa_sigla', 'load_factor']]
 
 def select_view_eficiencia_carga():
     conn = get_connection()
     if not conn:
         return None
-    
+
     cursor = conn.cursor()
     query = """
         SELECT empresa_sigla, eficiencia_carga
@@ -208,6 +216,7 @@ def select_view_eficiencia_carga():
         ORDER BY eficiencia_carga DESC
         LIMIT 5;
     """
+    print("Query Eficiência de Carga:\n", query.strip())
     cursor.execute(query)
     data = cursor.fetchall()
     conn.close()
