@@ -8,23 +8,27 @@
 <ul>
     <li><strong>Pytohn v3.13.3</strong>: Compatível para analisar, processar, visualizar e interpretar dados com as blibiotecas/<i>frameworks</i> corretos;</li>
     <br>
-    <li><strong>Pandas v2.2.3</strong>: Utilizado para manipulação e análise de dados tabulares;</li>
+    <li><strong>Pandas v2.2.3</strong>: Manipulação e análise de dados em tabelas (DataFrames).;</li>
     <br>
-    <li><strong>PostegreSQL v17.5</strong>: Banco de dados relacional usado para armazenar, consultar e gerenciar grandes volumes de dados com segurança e robustez;</li>
+    <li><strong>PostegreSQL v17.5</strong>: Banco de dados relacional robusto, open source e muito usado em aplicações profissionais.;</li>
     <br>
-    <li><strong>Streamlit v1.45.1</strong>: Permite criar aplicações web interativas para visualização de dados de forma rápida e simples;</li>
+    <li><strong>Psycopg2_binary v2.9.10</strong>: Driver para conectar e interagir com bancos de dados PostgreSQL;</li>
     <br>
-    <li><strong>Numpy v2.2.6</strong>: Suporte a operações matemáticas e vetoriais, base para manipulação de arrays numéricos;</li>
+    <li><strong>Streamlit v1.45.1</strong>:Framework para criar interfaces web interativas voltadas a análise de dados;</li>
     <br>
-    <li><strong>Plotly v6.1.2</strong>: Gera gráficos interativos com visual moderno e dinâmico;</li>
+    <li><strong>Streamlit_extras v0.6.0</strong>: Conjunto de componentes prontos para enriquecer apps Streamlit;</li>
     <br>
-    <li><strong>Folium v0.19.7</strong>: Cria mapas interativos geográficos, geralmente integrando dados com localização;</li>
+    <li><strong>Plotly v6.1.2</strong>: Criação de gráficos interativos e dinâmicos;</li>
     <br>
-    <li><strong>Streamlit_folium v0.25.0</strong>: Faz a integração entre mapas Folium e a interface do Streamlit;</li>
+    <li><strong>Matplotlib v3.10.3</strong>: Geração de gráficos e visualizações estáticas em 2D;</li>
     <br>
-    <li><strong>Pillow v11.2.1</strong>: Permite abrir, editar e exibir imagens dentro da aplicação;</li>
+    <li><strong>Folium v0.19.7</strong>: Criação de mapas interativos baseados em Leaflet.js;</li>
     <br>
-    <li><strong>Streamlit_extras v0.6.0</strong>: Adiciona cartões de métricas customizadas ao Streamlit, melhorando a apresentação dos dados.</li>
+    <li><strong>Streamlit_folium v0.25.0</strong>: Integra mapas do Folium em apps Streamlit;</li>
+    <br>
+    <li><strong>Numpy v2.2.6</strong>: Cálculos numéricos e manipulação de arrays multidimensionais;</li>
+    <br>
+    <li><strong>Pillow v11.2.1</strong>: Manipulação e processamento de imagens (abreviação de "PIL").</li>
 </ul>
 
 <hr>
@@ -106,7 +110,7 @@ cd seu/repositorio</code></pre>
 
   <li>
     <strong>Instale as dependências do projeto</strong><br>
-    <pre><code>pip install streamlit pandas numpy plotly folium streamlit-folium pillow streamlit-extras</code></pre>
+    <pre><code>pip install psycopg2-binary streamlit pandas numpy sqlalchemy matplotlib plotly folium streamlit-folium Pillow streamlit-extras</code></pre>
   </li>
 
   <li>
