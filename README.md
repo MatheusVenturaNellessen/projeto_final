@@ -134,54 +134,54 @@ pip install psycopg
 Em seguida, crie um arquivo secrets.toml com as credenciais de acesso ao banco:
 
 
-# secrets.toml
+### secrets.toml
 
-[postgres]
-host = "localhost"
-port = 5432
-dbname = "nome_do_banco"
-user = "seu_usuario"
-password = "sua_senha"
+    [postgres]
+    host = "localhost"
+    port = 5432
+    dbname = "nome_do_banco"
+    user = "seu_usuario"
+    password = "sua_senha"
 
 Esse arquivo será lido no seu código para estabelecer a conexão com o banco de forma segura.
 
-🏗️ Criação das Tabelas
+### Criação das Tabelas
 A criação das tabelas foi feita por meio de um script SQL. Para garantir que os comandos sejam executados no schema correto, o script deve começar com:
 SET search_path TO nome_do_schema;
 Exemplo de script (script.sql):
 SET search_path TO aeroportos;
 
-CREATE TABLE aeroportos (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(100),
-    cidade VARCHAR(100),
-    pais VARCHAR(100)
-);
-
-CREATE TABLE musicas (
-    id_musica INTEGER PRIMARY KEY,
-    nome VARCHAR(100),
-    artista VARCHAR(100),
-    genero VARCHAR(50)
-);
+    CREATE TABLE aeroportos (
+        id SERIAL PRIMARY KEY,
+        nome VARCHAR(100),
+        cidade VARCHAR(100),
+        pais VARCHAR(100)
+    );
+    
+    CREATE TABLE musicas (
+        id_musica INTEGER PRIMARY KEY,
+        nome VARCHAR(100),
+        artista VARCHAR(100),
+        genero VARCHAR(50)
+    );
 
 Esse script pode ser lido e executado no Python com o seguinte trecho:
-import os
-import psycopg
-from utils.load_credentials import get_credentials  # função que lê o secrets.toml
+    import os
+    import psycopg
+    from utils.load_credentials import get_credentials  # função que lê o secrets.toml
+    
+    conn = psycopg.connect(**get_credentials())
+    
+    sql_path = os.path.join(os.path.dirname(__file__), 'scripts', 'script.sql')
+    with open(sql_path, 'r') as f:
+        content = f.read()
+    
+    with conn.cursor() as cur:
+        cur.execute(content)
+        conn.commit()
 
-conn = psycopg.connect(**get_credentials())
 
-sql_path = os.path.join(os.path.dirname(__file__), 'scripts', 'script.sql')
-with open(sql_path, 'r') as f:
-    content = f.read()
-
-with conn.cursor() as cur:
-    cur.execute(content)
-    conn.commit()
-
-
-📥 Inserção de Dados
+### Inserção de Dados
 O banco pode ser populado de duas formas:
 Inserindo os dados diretamente no próprio arquivo .sql;
 
@@ -190,23 +190,23 @@ Ou utilizando um script Python com comandos INSERT, muitas vezes combinados com 
 
 
 Exemplo com pandas e psycopg:
-import pandas as pd
-import psycopg
-
-df = pd.read_csv("aeroportos.csv", sep=';')
-
-conn = psycopg.connect(**get_credentials())
-cur = conn.cursor()
-
-for _, row in df.iterrows():
-    cur.execute("""
-        INSERT INTO aeroportos (nome, cidade, pais)
-        VALUES (%s, %s, %s)
-    """, (row['nome'], row['cidade'], row['pais']))
-
-conn.commit()
-cur.close()
-conn.close()
+    import pandas as pd
+    import psycopg
+    
+    df = pd.read_csv("aeroportos.csv", sep=';')
+    
+    conn = psycopg.connect(**get_credentials())
+    cur = conn.cursor()
+    
+    for _, row in df.iterrows():
+        cur.execute("""
+            INSERT INTO aeroportos (nome, cidade, pais)
+            VALUES (%s, %s, %s)
+        """, (row['nome'], row['cidade'], row['pais']))
+    
+    conn.commit()
+    cur.close()
+    conn.close()
 
   </li>
   
