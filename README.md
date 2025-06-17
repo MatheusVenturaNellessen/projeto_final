@@ -8,9 +8,11 @@
 <ul>
     <li><strong>Pytohn v3.13.3</strong>: Compatível para analisar, processar, visualizar e interpretar dados com as blibiotecas/<i>frameworks</i> corretos;</li>
     <br>
-    <li><strong>Pandas v2.2.3</strong>: Manipulação e análise de dados em tabelas (DataFrames).;</li>
+    <li><strong>Pandas v2.2.3</strong>: Manipulação e análise de dados em tabelas (DataFrames);</li>
     <br>
-    <li><strong>PostegreSQL v17.5</strong>: Banco de dados relacional robusto, open source e muito usado em aplicações profissionais.;</li>
+    <li><strong>Numpy v2.2.6</strong>: Cálculos numéricos e manipulação de arrays multidimensionais;</li>
+    <br>
+    <li><strong>PostegreSQL v17.5</strong>: Banco de dados relacional robusto, open source e muito usado em aplicações profissionais;</li>
     <br>
     <li><strong>Psycopg2_binary v2.9.10</strong>: Driver para conectar e interagir com bancos de dados PostgreSQL;</li>
     <br>
@@ -26,8 +28,6 @@
     <br>
     <li><strong>Streamlit_folium v0.25.0</strong>: Integra mapas do Folium em apps Streamlit;</li>
     <br>
-    <li><strong>Numpy v2.2.6</strong>: Cálculos numéricos e manipulação de arrays multidimensionais;</li>
-    <br>
     <li><strong>Pillow v11.2.1</strong>: Manipulação e processamento de imagens (abreviação de "PIL").</li>
 </ul>
 
@@ -39,8 +39,9 @@
 PROJETO_FINAL_SENAI/
 ├── database/                                
 │   ├── anac/                              # contém o(s) arquivo(s) CSV origem e destino dos dados de aviação
-│   └── spotify/                           # contém o(s) arquivo(s) CSV origem e destino dos dados de músicas  
-│
+│   ├── spotify/                           # contém o(s) arquivo(s) CSV origem e destino dos dados de músicas  
+│   └── app.py                             # script para criação do banco de dados da aplicação
+│    
 ├── frontend/                
 │   ├── image/                             # contém imagens utilizadas na aplicação
 │   ├── esqueleto.py                       # script da seção da análise dos dados de músicas
@@ -74,12 +75,12 @@ PROJETO_FINAL_SENAI/
 <hr>
 
 <h2>Funcionalidades</h2>
-
-<h3>[título da funcionalidade]</h3>
+<p>Pendente...</p>
+<!--<h3>[título da funcionalidade]</h3>
 <img src="caminho/relativo/do/arquivo.gif" alt="texto alternativo"/>
 <ul>
   <li>[descrição da(s) funcionalidade(s)]</li>
-</ul>
+</ul>-->
 
 <hr>
 
@@ -117,99 +118,48 @@ cd seu/repositorio</code></pre>
   </li>
 
   <li>
-      Neste projeto, foi utilizado o PostgreSQL para armazenar os dados de aeroportos e do Spotify.
-📌 Configuração Inicial
-Instale o PostgreSQL e o pgAdmin 4
- O pgAdmin é utilizado para gerenciar o banco de dados de forma gráfica.
-
-
-Crie um servidor local no pgAdmin e, dentro dele, crie o banco de dados que será utilizado no projeto.
-
-
-Para conectar o banco ao código Python, é necessário instalar a biblioteca psycopg:
-
-
-pip install psycopg
-
-Em seguida, crie um arquivo secrets.toml com as credenciais de acesso ao banco:
-
-
-### secrets.toml
-
-    [postgres]
-    host = "localhost"
-    port = 5432
-    dbname = "nome_do_banco"
-    user = "seu_usuario"
-    password = "sua_senha"
-
-Esse arquivo será lido no seu código para estabelecer a conexão com o banco de forma segura.
-
-### Criação das Tabelas
-A criação das tabelas foi feita por meio de um script SQL. Para garantir que os comandos sejam executados no schema correto, o script deve começar com:
-SET search_path TO nome_do_schema;
-Exemplo de script (script.sql):
-SET search_path TO aeroportos;
-
-    CREATE TABLE aeroportos (
-        id SERIAL PRIMARY KEY,
-        nome VARCHAR(100),
-        cidade VARCHAR(100),
-        pais VARCHAR(100)
-    );
-    
-    CREATE TABLE musicas (
-        id_musica INTEGER PRIMARY KEY,
-        nome VARCHAR(100),
-        artista VARCHAR(100),
-        genero VARCHAR(50)
-    );
-
-Esse script pode ser lido e executado no Python com o seguinte trecho:
-    import os
-    import psycopg
-    from utils.load_credentials import get_credentials  # função que lê o secrets.toml
-    
-    conn = psycopg.connect(**get_credentials())
-    
-    sql_path = os.path.join(os.path.dirname(__file__), 'scripts', 'script.sql')
-    with open(sql_path, 'r') as f:
-        content = f.read()
-    
-    with conn.cursor() as cur:
-        cur.execute(content)
-        conn.commit()
-
-
-### Inserção de Dados
-O banco pode ser populado de duas formas:
-Inserindo os dados diretamente no próprio arquivo .sql;
-
-
-Ou utilizando um script Python com comandos INSERT, muitas vezes combinados com SELECT.
-
-
-Exemplo com pandas e psycopg:
-    import pandas as pd
-    import psycopg
-    
-    df = pd.read_csv("aeroportos.csv", sep=';')
-    
-    conn = psycopg.connect(**get_credentials())
-    cur = conn.cursor()
-    
-    for _, row in df.iterrows():
-        cur.execute("""
-            INSERT INTO aeroportos (nome, cidade, pais)
-            VALUES (%s, %s, %s)
-        """, (row['nome'], row['cidade'], row['pais']))
-    
-    conn.commit()
-    cur.close()
-    conn.close()
-
-  </li>
-  
+    <ol>
+      <li>
+        <strong>Instale o PostegreSQL (caso não possuir)</strong><br>
+        Acesse: <a href="https://www.postgresql.org/download/">postgresql.org/download</a><br>
+        Baixe e instale conforme seu sistema operacional.
+      </li>
+      <li>
+        <strong>Instale o pgAdmin 4 (caso não possuir)</strong><br>
+        Acesse: <a href="https://www.pgadmin.org/download/">pgadmin.org/download</a><br>
+        Baixe e instale conforme seu sistema operacional.
+      </li>
+      <li>
+        Verifique as intalações:<br>
+        <pre><code>psql --version
+where pgadmin4</code></pre>
+      </li>
+      <li>Crie um servidor local no <code>pgAdmin</code> e crie nele o banco de dados que será utilizado em seu ambiente.</li>
+      <li>
+        Em seguida, eite o arquivo <a href="./.streamlit/secrets.toml">secrets.toml</a> com as credenciais de acesso ao banco:
+        <pre>[postgres]
+host = "localhost"
+port = 5432
+dbname = "nome_do_banco"
+user = "seu_usuario"
+password = "sua_senha"</pre>
+      </li>
+      <li>Execute o script <code>app.py</code>, localizado em <code>database/</code></li>
+      <details>
+        <summary>Clique aqui para mais detalhes.</summary>
+          <h4>Criação das tabelas</h4>
+          <p>A criação das tabelas foi feita por meio de um script SQL. Para garantir que os comandos sejam executados no schema correto, o script deve começar com:</p>
+          <pre>SET search_path TO nome_do_schema</pre>
+          <hr>
+          <h4>Inserção de Dados</h4>
+          <p>O banco pode ser populado de duas formas:</p>
+          <ul>
+            <li>Inserindo os dados diretamente no próprio arquivo <code>.sql</code>;</li>
+            <li>Ou utilizando um script <code>Python</code> com comandos <code>INSERT</code>, muitas vezes combinados com <code>SELECT</code>.</li>
+          </ul>
+          <p>Desta forma a conexão com o banco de dados será estabelecido de forma segura.</p>
+      </details>
+    </ol>
   <li>
     <strong>Execute a aplicação com Streamlit</strong>
     <pre><code>streamlit run main.py</code></pre>
@@ -245,5 +195,5 @@ Exemplo com pandas e psycopg:
 
 <hr>
 
-<h2>Licença e Autor</h2>
+<h2>Licença e Autoria</h2>
 <p align="justify">Este projeto foi desenvolvido por <a href="https://github.com/MatheusVenturaNellessen">Matheus V. Nellessen</a>, <a href="https://github.com/andre-ciccozzi">André Cicozzi</a>, <a href="https://github.com/heitorkino">Heitor Aguiar</a>, <a href="https://github.com/LeoXP890">Leonardo Novi</a>, e está licenciado sob a licença MIT. Veja o <a href="./LICENSE">documento</a> para mais detalhes.</p>
